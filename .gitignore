@@ -1,0 +1,9 @@
+﻿vendor/
+node_modules/
+.env
+.phpunit.cache/
+coverage/
+public/assets/css/app.css
+.idea/
+.vscode/
+/scripts/*.ps1
