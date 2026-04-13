@@ -2,56 +2,42 @@
 
 declare(strict_types=1);
 
-$trips = $trips ?? [];
+/** @var array<int, array<string, mixed>> $trips */
 
-$formatDate = static function ($value): string {
-    if (!is_string($value) || $value === '') {
-        return '';
-    }
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
 
-    try {
-        $date = new DateTimeImmutable($value);
-        return $date->format('d/m/Y H:i');
-    } catch (Exception $e) {
-        return $value;
-    }
-};
+$isConnected = isset($_SESSION['user']) && is_array($_SESSION['user']);
+$basePath = '/trip/show';
+
+$requestUri = $_SERVER['REQUEST_URI'] ?? '';
+if (str_starts_with($requestUri, '/touche-pas-au-klaxon/public')) {
+    $basePath = '/touche-pas-au-klaxon/public/trip/show';
+}
 ?>
 
 <h1>Trajets disponibles</h1>
 
-<?php if (empty($trips)) : ?>
-<p>Aucun trajet disponible</p>
-<?php else : ?>
+<?php if ($trips === []): ?>
+    <p>Aucun trajet disponible pour le moment.</p>
+<?php else: ?>
+    <?php foreach ($trips as $trip): ?>
+        <article>
+            <p><strong>DÃ©part :</strong> <?= htmlspecialchars((string) $trip['departure_agency']) ?></p>
+            <p><strong>Date de dÃ©part :</strong> <?= htmlspecialchars((string) $trip['departure_datetime']) ?></p>
+            <p><strong>ArrivÃ©e :</strong> <?= htmlspecialchars((string) $trip['arrival_agency']) ?></p>
+            <p><strong>Date dâ€™arrivÃ©e :</strong> <?= htmlspecialchars((string) $trip['arrival_datetime']) ?></p>
+            <p><strong>Places disponibles :</strong> <?= htmlspecialchars((string) $trip['available_seats']) ?></p>
 
-<table class="table">
-<thead>
-<tr>
-<th>DÃ©part</th>
-<th>Date dÃ©part</th>
-<th>ArrivÃ©e</th>
-<th>Date arrivÃ©e</th>
-<th>Places</th>
-</tr>
-</thead>
-
-<tbody>
-
-<?php foreach ($trips as $trip) : ?>
-
-<tr>
-<td><?= htmlspecialchars($trip['departure_agency']) ?></td>
-<td><?= htmlspecialchars($formatDate($trip['departure_datetime'])) ?></td>
-
-<td><?= htmlspecialchars($trip['arrival_agency']) ?></td>
-<td><?= htmlspecialchars($formatDate($trip['arrival_datetime'])) ?></td>
-
-<td><?= htmlspecialchars($trip['available_seats']) ?></td>
-</tr>
-
-<?php endforeach; ?>
-
-</tbody>
-</table>
-
+            <?php if ($isConnected): ?>
+                <p>
+                    <a href="<?= htmlspecialchars($basePath) ?>?id=<?= urlencode((string) $trip['id']) ?>">
+                        Voir le dÃ©tail
+                    </a>
+                </p>
+            <?php endif; ?>
+        </article>
+        <hr>
+    <?php endforeach; ?>
 <?php endif; ?>
