@@ -1,11 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
-class HomeController
+use App\Models\Trip;
+
+/**
+ * Page d'accueil.
+ */
+class HomeController extends Controller
 {
+    /**
+     * Affiche les trajets disponibles.
+     */
     public function index(): void
     {
-        require __DIR__ . '/../Views/home/index.php';
+        $tripModel = new Trip();
+
+        $trips = $tripModel->findAvailableTrips();
+
+        $this->render('home/index', [
+            'trips' => $trips
+        ]);
     }
 }
