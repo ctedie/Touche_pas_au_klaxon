@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Core\Session;
 use App\Core\View;
 
 /**
@@ -13,8 +12,6 @@ use App\Core\View;
 abstract class Controller
 {
     /**
-     * Affiche une vue.
-     *
      * @param array<string, mixed> $data
      */
     protected function render(string $view, array $data = []): void
@@ -22,45 +19,45 @@ abstract class Controller
         View::render($view, $data);
     }
 
-    /**
-     * Redirige vers une URL interne.
-     */
-    protected function redirect(string $path): never
+    protected function redirect(string $path): void
     {
-        header('Location: ' . base_url($path));
+        $basePath = '/touche-pas-au-klaxon/public';
+
+        if ($path === '') {
+            $path = '/';
+        }
+
+        if ($path[0] !== '/') {
+            $path = '/' . $path;
+        }
+
+        header('Location: ' . $basePath . $path);
         exit;
     }
 
     /**
-     * Retourne l'utilisateur connectÃ©.
-     *
      * @return array<string, mixed>|null
      */
     protected function getAuthenticatedUser(): ?array
     {
-        $user = Session::get('auth');
+        if (!isset($_SESSION['user']) || !is_array($_SESSION['user'])) {
+            return null;
+        }
 
-        return is_array($user) ? $user : null;
+        return $_SESSION['user'];
     }
 
-    /**
-     * VÃ©rifie qu'un utilisateur est connectÃ©.
-     */
     protected function requireAuth(): void
     {
         if ($this->getAuthenticatedUser() === null) {
-            Session::flash('error', 'Vous devez Ãªtre connectÃ© pour accÃ©der Ã  cette page.');
-            $this->redirect('login');
+            $this->redirect('/login');
         }
     }
 
-    /**
-     * EmpÃªche l'accÃ¨s Ã  une page si l'utilisateur est dÃ©jÃ  connectÃ©.
-     */
     protected function requireGuest(): void
     {
         if ($this->getAuthenticatedUser() !== null) {
-            $this->redirect('');
+            $this->redirect('/');
         }
     }
 }

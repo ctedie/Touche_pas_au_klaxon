@@ -4,83 +4,71 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Core\Session;
 use App\Models\User;
 
 /**
- * GÃ¨re l'authentification.
+ * ContrÃ´leur d''authentification.
  */
 final class AuthController extends Controller
 {
-    /**
-     * Affiche le formulaire de connexion.
-     */
     public function showLoginForm(): void
     {
         $this->requireGuest();
 
         $this->render('auth/login', [
-            'pageTitle' => 'Connexion',
-            'oldEmail' => '',
+            'title' => 'Connexion',
         ]);
     }
 
-    /**
-     * Traite la connexion.
-     */
     public function login(): void
     {
         $this->requireGuest();
 
-        $email = trim((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $password = (string) filter_input(INPUT_POST, 'password');
+        $email = isset($_POST['email']) ? trim((string) $_POST['email']) : '';
+        $password = isset($_POST['password']) ? (string) $_POST['password'] : '';
 
         if ($email === '' || $password === '') {
-            Session::flash('error', 'Veuillez renseigner votre email et votre mot de passe.');
-            $this->render('auth/login', [
-                'pageTitle' => 'Connexion',
-                'oldEmail' => $email,
-            ]);
-
-            return;
+            $_SESSION['flash_error'] = 'Veuillez renseigner votre email et votre mot de passe.';
+            $this->redirect('/login');
         }
 
         $userModel = new User();
-        $user = $userModel->authenticate($email, $password);
+        $user = $userModel->findByEmail($email);
 
         if ($user === null) {
-            Session::flash('error', 'Identifiants invalides.');
-            $this->render('auth/login', [
-                'pageTitle' => 'Connexion',
-                'oldEmail' => $email,
-            ]);
-
-            return;
+            $_SESSION['flash_error'] = 'Identifiants invalides.';
+            $this->redirect('/login');
         }
 
-        Session::regenerate();
-        Session::set('auth', [
-            'id' => (int) $user['id'],
-            'nom' => (string) $user['nom'],
-            'prenom' => (string) $user['prenom'],
-            'email' => (string) $user['email'],
-            'telephone' => (string) $user['telephone'],
-            'role' => (string) $user['role'],
-        ]);
+        $storedPassword = $user['mot_de_passe'] ?? null;
 
-        Session::flash('success', 'Connexion rÃ©ussie.');
-        $this->redirect('');
+        if (!is_string($storedPassword)) {
+            $_SESSION['flash_error'] = 'Identifiants invalides.';
+            $this->redirect('/login');
+        }
+
+        $isValidPassword = password_verify($password, $storedPassword) || $password === $storedPassword;
+
+        if (!$isValidPassword) {
+            $_SESSION['flash_error'] = 'Identifiants invalides.';
+            $this->redirect('/login');
+        }
+
+        $_SESSION['user'] = [
+            'id' => (int) ($user['id'] ?? 0),
+            'prenom' => (string) ($user['prenom'] ?? ''),
+            'nom' => (string) ($user['nom'] ?? ''),
+            'email' => (string) ($user['email'] ?? ''),
+            'telephone' => (string) ($user['telephone'] ?? ''),
+            'role' => (string) ($user['role'] ?? 'user'),
+        ];
+
+        $this->redirect('/');
     }
 
-    /**
-     * DÃ©connecte l'utilisateur.
-     */
     public function logout(): void
     {
-        Session::forgetAuth();
-        Session::regenerate();
-        Session::flash('success', 'Vous avez Ã©tÃ© dÃ©connectÃ©.');
-
-        $this->redirect('');
+        unset($_SESSION['user']);
+        $this->redirect('/login');
     }
 }

@@ -2,46 +2,32 @@
 
 declare(strict_types=1);
 
-$user = current_user();
-$successMessage = flash('success');
-$errorMessage = flash('error');
+$user = $_SESSION['user'] ?? null;
+$isAuthenticated = is_array($user);
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title><?= e($pageTitle ?? 'Touche pas au klaxon') ?></title>
+    <title>Touche pas au klaxon</title>
 </head>
 <body>
-    <header>
-        <div>
-            <a href="<?= e(base_url()) ?>">Touche pas au klaxon</a>
-        </div>
+<header>
+    <div>
+        <a href="/touche-pas-au-klaxon/public/">Touche pas au klaxon</a>
+    </div>
 
-        <nav>
-            <?php if ($user === null): ?>
-                <a href="<?= e(base_url('login')) ?>">Connexion</a>
-            <?php else: ?>
-                <span>
-                    <?= e((string) $user['prenom']) ?> <?= e((string) $user['nom']) ?>
-                    (<?= e((string) $user['role']) ?>)
-                </span>
-                |
-                <a href="<?= e(base_url('logout')) ?>">DÃ©connexion</a>
-            <?php endif; ?>
-        </nav>
-    </header>
-
-    <?php if ($successMessage !== null): ?>
-        <div>
-            <?= e($successMessage) ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($errorMessage !== null): ?>
-        <div>
-            <?= e($errorMessage) ?>
-        </div>
-    <?php endif; ?>
-
-    <main>
+    <div>
+        <?php if ($isAuthenticated): ?>
+            <a href="/touche-pas-au-klaxon/public/trip/create">Proposer un trajet</a>
+            <span>
+                <?= htmlspecialchars((string) ($user['prenom'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                <?= htmlspecialchars((string) ($user['nom'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+            </span>
+            <a href="/touche-pas-au-klaxon/public/logout">DÃ©connexion</a>
+        <?php else: ?>
+            <a href="/touche-pas-au-klaxon/public/login">Connexion</a>
+        <?php endif; ?>
+    </div>
+</header>

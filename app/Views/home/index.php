@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require __DIR__ . '/../partials/flash.php';
+
 /** @var array<int, array<string, mixed>> $trips */
 
 require __DIR__ . '/../layouts/header.php';
@@ -15,16 +17,16 @@ require __DIR__ . '/../layouts/header.php';
     <ul>
         <?php foreach ($trips as $trip): ?>
             <li>
-                <strong>Départ :</strong> <?= e((string) $trip['departure_agency']) ?><br>
-                <strong>Date de départ :</strong> <?= e((string) $trip['departure_datetime']) ?><br>
-                <strong>Arrivée :</strong> <?= e((string) $trip['arrival_agency']) ?><br>
-                <strong>Date d’arrivée :</strong> <?= e((string) $trip['arrival_datetime']) ?><br>
-                <strong>Places disponibles :</strong> <?= e((string) $trip['available_seats']) ?><br>
+                <strong>DÃ©part :</strong> <?= htmlspecialchars((string) $trip['departure_agency'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong>Date de dÃ©part :</strong> <?= htmlspecialchars((string) $trip['departure_datetime'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong>ArrivÃ©e :</strong> <?= htmlspecialchars((string) $trip['arrival_agency'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong>Date dâ€™arrivÃ©e :</strong> <?= htmlspecialchars((string) $trip['arrival_datetime'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong>Places disponibles :</strong> <?= htmlspecialchars((string) $trip['available_seats'], ENT_QUOTES, 'UTF-8') ?><br>
 
-                <?php if (is_authenticated()): ?>
-                    <a href="<?= e(base_url('trip/show?id=' . (string) $trip['id'])) ?>">Voir le détail</a>
+                <?php if (isset($_SESSION['user']) && is_array($_SESSION['user'])): ?>
+                    <a href="/touche-pas-au-klaxon/public/trip/show?id=<?= urlencode((string) $trip['id']) ?>">Voir le dÃ©tail</a>
                 <?php else: ?>
-                    <a href="<?= e(base_url('login')) ?>">Connectez-vous pour voir le détail</a>
+                    <a href="/touche-pas-au-klaxon/public/login">Connectez-vous pour voir le dÃ©tail</a>
                 <?php endif; ?>
             </li>
             <hr>

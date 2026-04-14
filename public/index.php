@@ -2,35 +2,38 @@
 
 declare(strict_types=1);
 
-use App\Core\Session;
+session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../app/Helpers/functions.php';
-
-Session::start();
 
 $routes = require __DIR__ . '/../routes/web.php';
 
-$uri = strtok($_SERVER['REQUEST_URI'], '?');
-$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$basePath = '/touche-pas-au-klaxon/public';
 
-$route = $routes[$uri] ?? null;
-
-if (is_array($route) && isset($route[0], $route[1]) && is_string($route[0]) && is_string($route[1])) {
-    $controller = $route[0];
-    $action = $route[1];
-
-    (new $controller())->$action();
+if (!is_string($uri)) {
+    http_response_code(400);
+    echo '400';
     exit;
 }
 
-if (is_array($route) && isset($route[$method]) && is_array($route[$method])) {
-    /** @var array{0: class-string, 1: string} $handler */
-    $handler = $route[$method];
-    $controller = $handler[0];
-    $action = $handler[1];
+if (str_starts_with($uri, $basePath)) {
+    $uri = substr($uri, strlen($basePath));
+}
 
-    (new $controller())->$action();
+if ($uri === '') {
+    $uri = '/';
+}
+
+if ($uri !== '/' && str_ends_with($uri, '/')) {
+    $uri = rtrim($uri, '/');
+}
+
+if (isset($routes[$uri])) {
+    $controller = $routes[$uri][0];
+    $method = $routes[$uri][1];
+
+    (new $controller())->$method();
     exit;
 }
 
