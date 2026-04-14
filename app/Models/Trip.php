@@ -8,7 +8,7 @@ use App\Core\Database;
 use PDO;
 
 /**
- * ModÃ¨le des trajets.
+ * ModÃƒÆ’Ã‚Â¨le des trajets.
  */
 final class Trip
 {
@@ -50,8 +50,49 @@ final class Trip
         return $trips;
     }
 
+/**
+ * Retourne un trajet par son identifiant.
+ *
+ * @return array<string, mixed>|null
+ */
+public function findById(int $tripId): ?array
+{
+    $sql = <<<SQL
+        SELECT
+            t.id,
+            t.auteur_id,
+            t.agence_depart_id,
+            t.agence_arrivee_id,
+            t.date_depart,
+            t.date_arrivee,
+            t.places_total,
+            t.places_disponibles,
+            ad.nom AS departure_agency,
+            aa.nom AS arrival_agency,
+            u.nom AS user_last_name,
+            u.prenom AS user_first_name,
+            u.email AS user_email,
+            u.telephone AS user_phone
+        FROM trajets t
+        INNER JOIN agences ad ON ad.id = t.agence_depart_id
+        INNER JOIN agences aa ON aa.id = t.agence_arrivee_id
+        INNER JOIN utilisateurs u ON u.id = t.auteur_id
+        WHERE t.id = :id
+        LIMIT 1
+    SQL;
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute([
+        'id' => $tripId,
+    ]);
+
+    $trip = $statement->fetch(PDO::FETCH_ASSOC);
+
+    return is_array($trip) ? $trip : null;
+}
+
     /**
-     * Retourne le dÃ©tail d'un trajet pour un utilisateur connectÃ©.
+     * Retourne le dÃƒÆ’Ã‚Â©tail d'un trajet pour un utilisateur connectÃƒÆ’Ã‚Â©.
      *
      * @param int $tripId
      * @return array<string, mixed>|null
@@ -92,4 +133,45 @@ final class Trip
         /** @var array<string, mixed> $trip */
         return $trip;
     }
+
+/**
+ * CrÃ©e un trajet.
+ *
+ * @param array<string, mixed> $data
+ */
+public function create(array $data): void
+{
+    $sql = <<<SQL
+        INSERT INTO trajets (
+            auteur_id,
+            agence_depart_id,
+            agence_arrivee_id,
+            date_depart,
+            date_arrivee,
+            places_total,
+            places_disponibles
+        ) VALUES (
+            :auteur_id,
+            :agence_depart_id,
+            :agence_arrivee_id,
+            :date_depart,
+            :date_arrivee,
+            :places_total,
+            :places_disponibles
+        )
+    SQL;
+
+    $statement = $this->pdo->prepare($sql);
+
+    $statement->execute([
+        'auteur_id' => (int) $data['auteur_id'],
+        'agence_depart_id' => (int) $data['agence_depart_id'],
+        'agence_arrivee_id' => (int) $data['agence_arrivee_id'],
+        'date_depart' => (string) $data['date_depart'],
+        'date_arrivee' => (string) $data['date_arrivee'],
+        'places_total' => (int) $data['places_total'],
+        'places_disponibles' => (int) $data['places_disponibles'],
+    ]);
+}
+
 }
