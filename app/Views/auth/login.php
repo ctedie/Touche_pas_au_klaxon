@@ -2,32 +2,54 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/../layouts/header.php';
+$basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
+$basePath = $basePath === '/' ? '' : rtrim($basePath, '/');
+
+$flashError = $_SESSION['flash_error'] ?? null;
+unset($_SESSION['flash_error']);
+
+$escape = static fn ($value) =>
+    htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 ?>
 
-<h1>Connexion</h1>
+<div class="container py-5" style="max-width: 500px">
 
-<?php if (isset($_SESSION['flash_error']) && is_string($_SESSION['flash_error'])): ?>
-    <div class="alert alert-danger" role="alert">
-        <?= htmlspecialchars($_SESSION['flash_error'], ENT_QUOTES, 'UTF-8') ?>
-    </div>
-    <?php unset($_SESSION['flash_error']); ?>
-<?php endif; ?>
+    <h1 class="mb-4">Connexion</h1>
 
-<form action="/touche-pas-au-klaxon/public/login/submit" method="post">
-    <div>
-        <label for="email">Adresse email</label><br>
-        <input type="email" id="email" name="email" required>
-    </div>
+    <?php if ($flashError): ?>
+        <div class="alert alert-danger">
+            <?= $escape($flashError) ?>
+        </div>
+    <?php endif; ?>
 
-    <div style="margin-top: 12px;">
-        <label for="password">Mot de passe</label><br>
-        <input type="password" id="password" name="password" required>
-    </div>
+    <form method="post" action="<?= $basePath ?>/login/submit">
 
-    <div style="margin-top: 16px;">
-        <button type="submit">Se connecter</button>
-    </div>
-</form>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
 
-<?php require __DIR__ . '/../layouts/footer.php'; ?>
+            <input
+                type="email"
+                name="email"
+                class="form-control"
+                required
+            >
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mot de passe</label>
+
+            <input
+                type="password"
+                name="password"
+                class="form-control"
+                required
+            >
+        </div>
+
+        <button class="btn btn-primary w-100">
+            Se connecter
+        </button>
+
+    </form>
+
+</div>

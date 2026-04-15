@@ -62,7 +62,6 @@ final class AuthController extends Controller
             'telephone' => (string) ($user['telephone'] ?? ''),
             'role' => (string) ($user['role'] ?? 'user'),
         ];
-
         $this->redirect('/');
     }
 

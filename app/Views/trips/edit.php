@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+/** @var array<string, mixed> $trip */
 /** @var array<int, array<string, mixed>> $agencies */
 /** @var array<string, string> $errors */
 /** @var array<string, mixed> $formData */
@@ -12,14 +13,14 @@ $basePath = $basePath === '/' ? '' : rtrim($basePath, '/');
 ?>
 
 <div class="container py-4">
-    <h1 class="mb-4">CrÃ©er un trajet</h1>
+    <h1 class="mb-4">Modifier le trajet</h1>
 
-    <form method="post" action="<?= $basePath ?>/trip/store" novalidate>
+    <form method="post" action="<?= $basePath ?>/trip/update?id=<?= (int) $trip['id'] ?>" novalidate>
         <?php require __DIR__ . '/_form.php'; ?>
 
         <div class="mt-4 d-flex gap-2">
-            <button type="submit" class="btn btn-primary">CrÃ©er le trajet</button>
-            <a href="<?= $basePath ?>/" class="btn btn-outline-secondary">Annuler</a>
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            <a href="<?= $basePath ?>/trip/show?id=<?= (int) $trip['id'] ?>" class="btn btn-outline-secondary">Annuler</a>
         </div>
     </form>
 </div>
