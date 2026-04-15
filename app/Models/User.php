@@ -8,15 +8,15 @@ use App\Core\Database;
 use PDO;
 
 /**
- * Modèle utilisateur.
+ * ModÃ¨le utilisateur.
  */
 final class User
 {
     private PDO $pdo;
 
-    public function __construct()
+    public function __construct(?PDO $pdo = null)
     {
-        $this->pdo = Database::getConnection();
+        $this->pdo = $pdo ?? Database::getConnection();
     }
 
     /**
@@ -64,8 +64,8 @@ final class User
     /**
      * Authentifie un utilisateur.
      *
-     * Compatible avec un mot de passe hashé ou, temporairement,
-     * avec une valeur en clair déjà présente dans le jeu d'essai.
+     * Compatible avec un mot de passe hashÃ© ou, temporairement,
+     * avec une valeur en clair dÃ©jÃ  prÃ©sente dans le jeu d'essai.
      *
      * @return array<string, mixed>|null
      */
@@ -89,7 +89,7 @@ final class User
     }
 
     /**
-     * Vérifie le mot de passe.
+     * VÃ©rifie le mot de passe.
      */
     private function verifyPassword(string $plainPassword, string $storedPassword): bool
     {
