@@ -31,14 +31,15 @@ $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, 
                 <?= $escape($user['prenom'] ?? '') ?>
                 <?= $escape($user['nom'] ?? '') ?>
             </span>
-            <a href="/touche-pas-au-klaxon/public/logout">Déconnexion</a>
+            <a href="/touche-pas-au-klaxon/public/logout">DÃ©connexion</a>
         <?php elseif ($isAuthenticated): ?>
             <a href="/touche-pas-au-klaxon/public/trip/create">Proposer un trajet</a>
+            <a href="/touche-pas-au-klaxon/public/reservations">Mes rÃ©servations</a>
             <span>
                 <?= $escape($user['prenom'] ?? '') ?>
                 <?= $escape($user['nom'] ?? '') ?>
             </span>
-            <a href="/touche-pas-au-klaxon/public/logout">Déconnexion</a>
+            <a href="/touche-pas-au-klaxon/public/logout">DÃ©connexion</a>
         <?php else: ?>
             <a href="/touche-pas-au-klaxon/public/login">Connexion</a>
         <?php endif; ?>

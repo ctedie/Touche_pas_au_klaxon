@@ -23,6 +23,10 @@ return [
     $basePath . '/trip/edit' => [TripController::class, 'edit'],
     $basePath . '/trip/update' => [TripController::class, 'update'],
     $basePath . '/trip/delete' => [TripController::class, 'delete'],
+    $basePath . '/trip/reserve' => [TripController::class, 'reserve'],
+
+    $basePath . '/reservations' => [TripController::class, 'reservations'],
+    $basePath . '/reservations/cancel' => [TripController::class, 'cancelReservation'],
 
     $basePath . '/admin' => [AdminController::class, 'dashboard'],
     $basePath . '/admin/users' => [AdminController::class, 'users'],
