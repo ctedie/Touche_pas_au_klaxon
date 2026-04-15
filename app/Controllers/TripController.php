@@ -7,7 +7,7 @@ namespace App\Controllers;
 use App\Services\TripService;
 
 /**
- * ContrÃ´leur des trajets.
+ * Contrôleur des trajets.
  */
 final class TripController extends Controller
 {
@@ -19,7 +19,7 @@ final class TripController extends Controller
     }
 
     /**
-     * Affiche le dÃ©tail d'un trajet.
+     * Affiche le détail d'un trajet.
      */
     public function show(): void
     {
@@ -49,7 +49,7 @@ final class TripController extends Controller
     }
 
     /**
-     * Affiche le formulaire de crÃ©ation.
+     * Affiche le formulaire de création.
      */
     public function create(): void
     {
@@ -91,7 +91,7 @@ final class TripController extends Controller
 
         $tripId = $this->tripService->createTrip($validation['data'], (int) $user['id']);
 
-        $_SESSION['flash_success'] = 'Le trajet a bien Ã©tÃ© crÃ©Ã©.';
+        $_SESSION['flash_success'] = 'Le trajet a bien été créé.';
         $this->redirect('/trip/show?id=' . $tripId);
     }
 
@@ -118,7 +118,7 @@ final class TripController extends Controller
 
         if ((int) $trip['author_id'] !== (int) $user['id']) {
             http_response_code(403);
-            echo 'Vous nâ€™Ãªtes pas autorisÃ© Ã  modifier ce trajet.';
+            echo 'Vous n’êtes pas autorisé à modifier ce trajet.';
             return;
         }
 
@@ -132,7 +132,7 @@ final class TripController extends Controller
     }
 
     /**
-     * Met Ã  jour un trajet.
+     * Met à jour un trajet.
      */
     public function update(): void
     {
@@ -154,7 +154,7 @@ final class TripController extends Controller
 
         if ((int) $trip['author_id'] !== (int) $user['id']) {
             http_response_code(403);
-            echo 'Vous nâ€™Ãªtes pas autorisÃ© Ã  modifier ce trajet.';
+            echo 'Vous n’êtes pas autorisé à modifier ce trajet.';
             return;
         }
 
@@ -173,7 +173,7 @@ final class TripController extends Controller
 
         $this->tripService->updateTrip($tripId, (int) $user['id'], $validation['data']);
 
-        $_SESSION['flash_success'] = 'Le trajet a bien Ã©tÃ© modifiÃ©.';
+        $_SESSION['flash_success'] = 'Le trajet a bien été modifié.';
         $this->redirect('/trip/show?id=' . $tripId);
     }
 
@@ -204,18 +204,18 @@ final class TripController extends Controller
 
         if ((int) $trip['author_id'] !== (int) $user['id']) {
             http_response_code(403);
-            echo 'Vous nâ€™Ãªtes pas autorisÃ© Ã  supprimer ce trajet.';
+            echo 'Vous n’êtes pas autorisé à supprimer ce trajet.';
             return;
         }
 
         $this->tripService->deleteTrip($tripId, (int) $user['id']);
 
-        $_SESSION['flash_success'] = 'Le trajet a bien Ã©tÃ© supprimÃ©.';
+        $_SESSION['flash_success'] = 'Le trajet a bien été supprimé.';
         $this->redirect('/');
     }
 
     /**
-     * RÃ©serve une place sur un trajet.
+     * Réserve une place sur un trajet.
      */
     public function reserve(): void
     {
@@ -239,12 +239,12 @@ final class TripController extends Controller
             $this->redirect('/trip/show?id=' . $tripId);
         }
 
-        $_SESSION['flash_success'] = 'Votre rÃ©servation a bien Ã©tÃ© enregistrÃ©e.';
+        $_SESSION['flash_success'] = 'Votre réservation a bien été enregistrée.';
         $this->redirect('/reservations');
     }
 
     /**
-     * Affiche les rÃ©servations de l'utilisateur connectÃ©.
+     * Affiche les réservations de l'utilisateur connecté.
      */
     public function reservations(): void
     {
@@ -257,7 +257,7 @@ final class TripController extends Controller
     }
 
     /**
-     * Annule une rÃ©servation.
+     * Annule une réservation.
      */
     public function cancelReservation(): void
     {
@@ -270,7 +270,7 @@ final class TripController extends Controller
         $reservationId = isset($_POST['reservation_id']) ? (int) $_POST['reservation_id'] : 0;
         if ($reservationId <= 0) {
             http_response_code(404);
-            echo 'RÃ©servation introuvable.';
+            echo 'Réservation introuvable.';
             return;
         }
 
@@ -281,12 +281,12 @@ final class TripController extends Controller
             $this->redirect('/reservations');
         }
 
-        $_SESSION['flash_success'] = 'La rÃ©servation a bien Ã©tÃ© annulÃ©e.';
+        $_SESSION['flash_success'] = 'La réservation a bien été annulée.';
         $this->redirect('/reservations');
     }
 
     /**
-     * Retourne l'utilisateur connectÃ©.
+     * Retourne l'utilisateur connecté.
      *
      * @return array<string, mixed>
      */

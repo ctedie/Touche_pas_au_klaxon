@@ -19,7 +19,7 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
 ?>
 
 <div class="container py-4">
-    <h1 class="mb-4">DÃ©tail du trajet</h1>
+    <h1 class="mb-4">Détail du trajet</h1>
 
     <?php if (is_string($flashError) && $flashError !== ''): ?>
         <div class="alert alert-danger">
@@ -36,16 +36,16 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
     <div class="card shadow-sm">
         <div class="card-body">
             <dl class="row mb-0">
-                <dt class="col-sm-4">Agence de dÃ©part</dt>
+                <dt class="col-sm-4">Agence de départ</dt>
                 <dd class="col-sm-8"><?= $escape($trip['departure_agency'] ?? '') ?></dd>
 
-                <dt class="col-sm-4">Date de dÃ©part</dt>
+                <dt class="col-sm-4">Date de départ</dt>
                 <dd class="col-sm-8"><?= $escape($trip['date_depart'] ?? '') ?></dd>
 
-                <dt class="col-sm-4">Agence dâ€™arrivÃ©e</dt>
+                <dt class="col-sm-4">Agence d’arrivée</dt>
                 <dd class="col-sm-8"><?= $escape($trip['arrival_agency'] ?? '') ?></dd>
 
-                <dt class="col-sm-4">Date dâ€™arrivÃ©e</dt>
+                <dt class="col-sm-4">Date d’arrivée</dt>
                 <dd class="col-sm-8"><?= $escape($trip['date_arrivee'] ?? '') ?></dd>
 
                 <dt class="col-sm-4">Places totales</dt>
@@ -62,7 +62,7 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
                 <dt class="col-sm-4">Email</dt>
                 <dd class="col-sm-8"><?= $escape($trip['author_email'] ?? '') ?></dd>
 
-                <dt class="col-sm-4">TÃ©lÃ©phone</dt>
+                <dt class="col-sm-4">Téléphone</dt>
                 <dd class="col-sm-8"><?= $escape($trip['author_phone'] ?? '') ?></dd>
             </dl>
         </div>
@@ -74,12 +74,12 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
         <?php if ($canReserve): ?>
             <form action="<?= $basePath ?>/trip/reserve" method="post" class="d-inline">
                 <input type="hidden" name="trip_id" value="<?= (int) $trip['id'] ?>">
-                <button type="submit" class="btn btn-success">RÃ©server</button>
+                <button type="submit" class="btn btn-success">Réserver</button>
             </form>
         <?php endif; ?>
 
         <?php if ($hasReservation): ?>
-            <span class="btn btn-outline-success disabled" aria-disabled="true">DÃ©jÃ  rÃ©servÃ©</span>
+            <span class="btn btn-outline-success disabled" aria-disabled="true">Déjà réservé</span>
         <?php endif; ?>
 
         <?php if (!$isAuthor && !$hasReservation && !$hasAvailableSeats): ?>
@@ -96,7 +96,7 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
                 action="<?= $basePath ?>/trip/delete"
                 method="post"
                 class="d-inline"
-                onsubmit="return confirm('Confirmer la suppression dÃ©finitive de ce trajet ?');"
+                onsubmit="return confirm('Confirmer la suppression définitive de ce trajet ?');"
             >
                 <input type="hidden" name="id" value="<?= (int) $trip['id'] ?>">
                 <button type="submit" class="btn btn-danger">Supprimer</button>

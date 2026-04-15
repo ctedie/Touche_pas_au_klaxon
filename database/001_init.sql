@@ -98,8 +98,8 @@ INSERT INTO agences (nom) VALUES
 
 -- =====================
 -- INSERT UTILISATEURS
--- mot de passe par dÃ©faut : password
--- hash gÃ©nÃ©rÃ© avec password_hash()
+-- mot de passe par défaut : password
+-- hash généré avec password_hash()
 -- =====================
 
 INSERT INTO utilisateurs (nom, prenom, telephone, email, mot_de_passe, role) VALUES
@@ -107,9 +107,9 @@ INSERT INTO utilisateurs (nom, prenom, telephone, email, mot_de_passe, role) VAL
 ('Dubois','Sophie','0698765432','sophie.dubois@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Bernard','Julien','0622446688','julien.bernard@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Moreau','Camille','0611223344','camille.moreau@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
-('LefÃ¨vre','Lucie','0777889900','lucie.lefevre@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
+('Lefèvre','Lucie','0777889900','lucie.lefevre@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Leroy','Thomas','0655443322','thomas.leroy@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
-('Roux','ChloÃ©','0633221199','chloe.roux@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
+('Roux','Chloé','0633221199','chloe.roux@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Petit','Maxime','0766778899','maxime.petit@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Garnier','Laura','0688776655','laura.garnier@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Dupuis','Antoine','0744556677','antoine.dupuis@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),

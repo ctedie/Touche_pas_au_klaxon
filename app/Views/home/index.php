@@ -17,7 +17,7 @@ $isAuthenticated = isset($_SESSION['user']) && is_array($_SESSION['user']);
 
 <section class="page-section">
     <div class="home-intro">
-        <h1 class="page-title">Trajets proposÃ©s</h1>
+        <h1 class="page-title">Trajets proposés</h1>
         <?php if (!$isAuthenticated): ?>
             <p class="lead mb-0">Pour obtenir plus d'informations sur un trajet, veuillez vous connecter.</p>
         <?php endif; ?>
@@ -32,10 +32,10 @@ $isAuthenticated = isset($_SESSION['user']) && is_array($_SESSION['user']);
             <table class="table table-striped table-hover table-app align-middle mb-0">
                 <thead>
                     <tr>
-                        <th>DÃ©part</th>
-                        <th>Date dÃ©part</th>
-                        <th>ArrivÃ©e</th>
-                        <th>Date arrivÃ©e</th>
+                        <th>Départ</th>
+                        <th>Date départ</th>
+                        <th>Arrivée</th>
+                        <th>Date arrivée</th>
                         <th>Places disponibles</th>
                         <th>Action</th>
                     </tr>
@@ -50,7 +50,7 @@ $isAuthenticated = isset($_SESSION['user']) && is_array($_SESSION['user']);
                             <td><?= $escape($trip['available_seats']) ?></td>
                             <td>
                                 <?php if ($isAuthenticated): ?>
-                                    <a class="btn btn-sm btn-outline-dark" href="<?= $escape(base_url('trip/show?id=' . urlencode((string) $trip['id']))) ?>">Voir le dÃ©tail</a>
+                                    <a class="btn btn-sm btn-outline-dark" href="<?= $escape(base_url('trip/show?id=' . urlencode((string) $trip['id']))) ?>">Voir le détail</a>
                                 <?php else: ?>
                                     <a class="btn btn-sm btn-dark" href="<?= $escape(base_url('login')) ?>">Connexion</a>
                                 <?php endif; ?>
@@ -70,7 +70,7 @@ $isAuthenticated = isset($_SESSION['user']) && is_array($_SESSION['user']);
                 <ul class="pagination mb-0">
                     <?php if (!empty($pagination['has_previous_page'])): ?>
                         <li class="page-item">
-                            <a class="page-link" href="<?= $escape(base_url('?page=' . (string) $pagination['previous_page'])) ?>">PrÃ©cÃ©dente</a>
+                            <a class="page-link" href="<?= $escape(base_url('?page=' . (string) $pagination['previous_page'])) ?>">Précédente</a>
                         </li>
                     <?php endif; ?>
 

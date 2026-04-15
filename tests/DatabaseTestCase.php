@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase as PhpUnitTestCase;
 use Tests\Support\TestDatabase;
 
 /**
- * Base commune pour les tests Ã©crivant en base.
+ * Base commune pour les tests écrivant en base.
  */
 abstract class DatabaseTestCase extends PhpUnitTestCase
 {
@@ -148,7 +148,7 @@ abstract class DatabaseTestCase extends PhpUnitTestCase
         $allowedTables = ['utilisateurs', 'agences', 'trajets', 'reservations'];
 
         if (!in_array($tableName, $allowedTables, true)) {
-            $this->fail('Table non autorisÃ©e pour le comptage dans les tests.');
+            $this->fail('Table non autorisée pour le comptage dans les tests.');
         }
 
         $statement = $this->pdo->query(sprintf('SELECT COUNT(*) FROM %s', $tableName));

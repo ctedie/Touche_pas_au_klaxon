@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Core;
 
 /**
- * Gestion centralisÃ©e de la session.
+ * Gestion centralisée de la session.
  */
 final class Session
 {
     /**
-     * DÃ©marre la session si nÃ©cessaire.
+     * Démarre la session si nécessaire.
      */
     public static function start(): void
     {
@@ -20,7 +20,7 @@ final class Session
     }
 
     /**
-     * DÃ©finit une valeur en session.
+     * Définit une valeur en session.
      *
      * @param mixed $value
      */
@@ -38,7 +38,7 @@ final class Session
     }
 
     /**
-     * VÃ©rifie l'existence d'une clÃ© en session.
+     * Vérifie l'existence d'une clé en session.
      */
     public static function has(string $key): bool
     {
@@ -46,7 +46,7 @@ final class Session
     }
 
     /**
-     * Supprime une clÃ© de session.
+     * Supprime une clé de session.
      */
     public static function remove(string $key): void
     {
@@ -62,7 +62,7 @@ final class Session
     }
 
     /**
-     * RÃ©cupÃ¨re puis supprime un message flash.
+     * Récupère puis supprime un message flash.
      */
     public static function getFlash(string $key): ?string
     {
@@ -81,7 +81,7 @@ final class Session
     }
 
     /**
-     * RÃ©gÃ©nÃ¨re l'identifiant de session.
+     * Régénère l'identifiant de session.
      */
     public static function regenerate(): void
     {
@@ -91,7 +91,7 @@ final class Session
     }
 
     /**
-     * DÃ©connecte l'utilisateur courant.
+     * Déconnecte l'utilisateur courant.
      */
     public static function forgetAuth(): void
     {

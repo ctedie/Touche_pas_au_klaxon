@@ -15,7 +15,7 @@ $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, 
 
     <?php if ($users === []): ?>
         <div class="empty-state">
-            <p class="mb-0">Aucun utilisateur trouvÃ©.</p>
+            <p class="mb-0">Aucun utilisateur trouvé.</p>
         </div>
     <?php else: ?>
         <div class="table-wrap table-responsive">
@@ -24,10 +24,10 @@ $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, 
                     <tr>
                         <th>ID</th>
                         <th>Nom</th>
-                        <th>PrÃ©nom</th>
+                        <th>Prénom</th>
                         <th>Email</th>
-                        <th>TÃ©lÃ©phone</th>
-                        <th>RÃ´le</th>
+                        <th>Téléphone</th>
+                        <th>Rôle</th>
                     </tr>
                 </thead>
                 <tbody>

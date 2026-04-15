@@ -33,16 +33,16 @@ $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, 
                         <span class="fw-medium">
                             Bonjour <?= $escape($user['prenom'] ?? '') ?> <?= $escape($user['nom'] ?? '') ?>
                         </span>
-                        <a class="btn btn-dark" href="<?= $escape(base_url('logout')) ?>">DÃ©connexion</a>
+                        <a class="btn btn-dark" href="<?= $escape(base_url('logout')) ?>">Déconnexion</a>
                     </div>
                 <?php elseif ($isAuthenticated): ?>
                     <div class="d-flex align-items-center gap-3 flex-wrap justify-content-end">
-                        <a class="btn btn-dark" href="<?= $escape(base_url('trip/create')) ?>">CrÃ©er un trajet</a>
-                        <a class="btn btn-outline-secondary" href="<?= $escape(base_url('reservations')) ?>">Mes rÃ©servations</a>
+                        <a class="btn btn-dark" href="<?= $escape(base_url('trip/create')) ?>">Créer un trajet</a>
+                        <a class="btn btn-outline-secondary" href="<?= $escape(base_url('reservations')) ?>">Mes réservations</a>
                         <span class="fw-medium">
                             Bonjour <?= $escape($user['prenom'] ?? '') ?> <?= $escape($user['nom'] ?? '') ?>
                         </span>
-                        <a class="btn btn-dark" href="<?= $escape(base_url('logout')) ?>">DÃ©connexion</a>
+                        <a class="btn btn-dark" href="<?= $escape(base_url('logout')) ?>">Déconnexion</a>
                     </div>
                 <?php else: ?>
                     <a class="btn btn-dark" href="<?= $escape(base_url('login')) ?>">Connexion</a>

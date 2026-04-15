@@ -8,7 +8,7 @@ use App\Core\Database;
 use PDO;
 
 /**
- * ModÃ¨le des trajets.
+ * Modèle des trajets.
  */
 final class Trip
 {
@@ -76,7 +76,7 @@ final class Trip
     }
 
     /**
-     * Retourne le dÃ©tail d'un trajet.
+     * Retourne le détail d'un trajet.
      *
      * @return array<string, mixed>|null
      */
@@ -140,7 +140,7 @@ final class Trip
     }
 
     /**
-     * Retourne la liste paginÃ©e des trajets pour l'administration.
+     * Retourne la liste paginée des trajets pour l'administration.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -201,7 +201,7 @@ final class Trip
     }
 
     /**
-     * CrÃ©e un trajet.
+     * Crée un trajet.
      *
      * @param array<string, mixed> $data
      */
@@ -242,7 +242,7 @@ final class Trip
     }
 
     /**
-     * Met Ã  jour un trajet appartenant Ã  son auteur.
+     * Met à jour un trajet appartenant à son auteur.
      *
      * @param array<string, mixed> $data
      */
@@ -277,7 +277,7 @@ final class Trip
     }
 
     /**
-     * Supprime un trajet appartenant Ã  son auteur.
+     * Supprime un trajet appartenant à son auteur.
      */
     public function delete(int $tripId, int $authorId): bool
     {
@@ -297,8 +297,8 @@ final class Trip
     }
 
     /**
-     * Supprime un trajet sans contrÃ´le d'auteur.
-     * UtilisÃ© uniquement par l'administration.
+     * Supprime un trajet sans contrôle d'auteur.
+     * Utilisé uniquement par l'administration.
      */
     public function deleteById(int $tripId): bool
     {

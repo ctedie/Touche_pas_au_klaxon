@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Services\TripService;
 
 /**
- * ContrÃ´leur du tableau de bord administrateur.
+ * Contrôleur du tableau de bord administrateur.
  */
 final class AdminController extends Controller
 {
@@ -52,8 +52,8 @@ final class AdminController extends Controller
 
         $this->render('admin/agency_form', [
             'currentUser' => $currentUser,
-            'pageTitle' => 'CrÃ©er une agence',
-            'submitLabel' => 'CrÃ©er',
+            'pageTitle' => 'Créer une agence',
+            'submitLabel' => 'Créer',
             'formAction' => '/admin/agencies/store',
             'errors' => [],
             'formData' => [
@@ -78,8 +78,8 @@ final class AdminController extends Controller
         if ($errors !== []) {
             $this->render('admin/agency_form', [
                 'currentUser' => $currentUser,
-                'pageTitle' => 'CrÃ©er une agence',
-                'submitLabel' => 'CrÃ©er',
+                'pageTitle' => 'Créer une agence',
+                'submitLabel' => 'Créer',
                 'formAction' => '/admin/agencies/store',
                 'errors' => $errors,
                 'formData' => [
@@ -90,7 +90,7 @@ final class AdminController extends Controller
         }
 
         $agencyModel->create($name);
-        $_SESSION['flash_success'] = "L'agence a bien Ã©tÃ© crÃ©Ã©e.";
+        $_SESSION['flash_success'] = "L'agence a bien été créée.";
 
         $this->redirect('/admin/agencies');
     }
@@ -171,7 +171,7 @@ final class AdminController extends Controller
         }
 
         $agencyModel->update($agencyId, $name);
-        $_SESSION['flash_success'] = "L'agence a bien Ã©tÃ© modifiÃ©e.";
+        $_SESSION['flash_success'] = "L'agence a bien été modifiée.";
 
         $this->redirect('/admin/agencies');
     }
@@ -203,13 +203,13 @@ final class AdminController extends Controller
         }
 
         if ($agencyModel->isUsed($agencyId)) {
-            $_SESSION['flash_error'] = 'Impossible de supprimer une agence utilisÃ©e par au moins un trajet.';
+            $_SESSION['flash_error'] = 'Impossible de supprimer une agence utilisée par au moins un trajet.';
             $this->redirect('/admin/agencies');
             return;
         }
 
         $agencyModel->delete($agencyId);
-        $_SESSION['flash_success'] = "L'agence a bien Ã©tÃ© supprimÃ©e.";
+        $_SESSION['flash_success'] = "L'agence a bien été supprimée.";
 
         $this->redirect('/admin/agencies');
     }
@@ -255,7 +255,7 @@ final class AdminController extends Controller
         }
 
         (new \App\Models\Trip())->deleteById($tripId);
-        $_SESSION['flash_success'] = 'Le trajet a bien Ã©tÃ© supprimÃ©.';
+        $_SESSION['flash_success'] = 'Le trajet a bien été supprimé.';
 
         $this->redirect('/admin/trips');
     }
@@ -268,11 +268,11 @@ final class AdminController extends Controller
         $errors = [];
 
         if ($name === '') {
-            $errors[] = 'Le nom de lâ€™agence est obligatoire.';
+            $errors[] = 'Le nom de l’agence est obligatoire.';
         }
 
         if ($name !== '' && $agencyModel->existsByName($name, $excludeId)) {
-            $errors[] = 'Une agence avec ce nom existe dÃ©jÃ .';
+            $errors[] = 'Une agence avec ce nom existe déjà.';
         }
 
         return $errors;
