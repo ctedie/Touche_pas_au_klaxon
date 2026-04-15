@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\Agency;
-use App\Models\Trip;
 use App\Models\User;
+use App\Services\TripService;
 
 /**
  * ContrÃ´leur du tableau de bord administrateur.
  */
 final class AdminController extends Controller
 {
+    private const TRIPS_PER_PAGE = 5;
+
     public function dashboard(): void
     {
         $currentUser = $this->requireAdmin();
@@ -215,11 +217,14 @@ final class AdminController extends Controller
     public function trips(): void
     {
         $currentUser = $this->requireAdmin();
-        $tripModel = new Trip();
+        $tripService = new TripService();
+        $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+        $result = $tripService->getAdminTripsPage($page, self::TRIPS_PER_PAGE);
 
         $this->render('admin/trips', [
             'currentUser' => $currentUser,
-            'trips' => $tripModel->findAllForAdmin(),
+            'trips' => $result['items'],
+            'pagination' => $result['pagination'],
         ]);
     }
 
@@ -240,8 +245,8 @@ final class AdminController extends Controller
             return;
         }
 
-        $tripModel = new Trip();
-        $trip = $tripModel->findById($tripId);
+        $tripService = new TripService();
+        $trip = $tripService->getTripById($tripId);
 
         if ($trip === null) {
             http_response_code(404);
@@ -249,7 +254,7 @@ final class AdminController extends Controller
             return;
         }
 
-        $tripModel->deleteById($tripId);
+        (new \App\Models\Trip())->deleteById($tripId);
         $_SESSION['flash_success'] = 'Le trajet a bien Ã©tÃ© supprimÃ©.';
 
         $this->redirect('/admin/trips');

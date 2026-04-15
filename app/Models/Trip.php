@@ -24,7 +24,7 @@ final class Trip
      *
      * @return array<int, array<string, mixed>>
      */
-    public function findAvailableTrips(): array
+    public function findAvailableTrips(int $limit, int $offset): array
     {
         $sql = <<<SQL
             SELECT
@@ -40,18 +40,39 @@ final class Trip
             WHERE t.places_disponibles > 0
               AND t.date_depart >= NOW()
             ORDER BY t.date_depart ASC
+            LIMIT :limit OFFSET :offset
         SQL;
 
-        $statement = $this->pdo->query($sql);
-
-        if ($statement === false) {
-            return [];
-        }
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
 
         /** @var array<int, array<string, mixed>> $trips */
         $trips = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         return $trips;
+    }
+
+    /**
+     * Retourne le nombre de trajets visibles sur l'accueil.
+     */
+    public function countAvailableTrips(): int
+    {
+        $sql = <<<SQL
+            SELECT COUNT(*)
+            FROM trajets t
+            WHERE t.places_disponibles > 0
+              AND t.date_depart >= NOW()
+        SQL;
+
+        $statement = $this->pdo->query($sql);
+
+        if ($statement === false) {
+            return 0;
+        }
+
+        return (int) $statement->fetchColumn();
     }
 
     /**
@@ -119,11 +140,11 @@ final class Trip
     }
 
     /**
-     * Retourne la liste complÃ¨te des trajets pour l'administration.
+     * Retourne la liste paginÃ©e des trajets pour l'administration.
      *
      * @return array<int, array<string, mixed>>
      */
-    public function findAllForAdmin(): array
+    public function findAllForAdmin(int $limit, int $offset): array
     {
         $sql = <<<SQL
             SELECT
@@ -141,19 +162,42 @@ final class Trip
             INNER JOIN agences ad ON ad.id = t.agence_depart_id
             INNER JOIN agences aa ON aa.id = t.agence_arrivee_id
             INNER JOIN utilisateurs u ON u.id = t.auteur_id
+            WHERE t.places_disponibles > 0
+              AND t.date_depart >= NOW()
             ORDER BY t.date_depart ASC
+            LIMIT :limit OFFSET :offset
         SQL;
 
-        $statement = $this->pdo->query($sql);
-
-        if ($statement === false) {
-            return [];
-        }
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
 
         /** @var array<int, array<string, mixed>> $trips */
         $trips = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         return $trips;
+    }
+
+    /**
+     * Retourne le nombre de trajets visibles dans l'administration.
+     */
+    public function countAllForAdmin(): int
+    {
+        $sql = <<<SQL
+            SELECT COUNT(*)
+            FROM trajets t
+            WHERE t.places_disponibles > 0
+              AND t.date_depart >= NOW()
+        SQL;
+
+        $statement = $this->pdo->query($sql);
+
+        if ($statement === false) {
+            return 0;
+        }
+
+        return (int) $statement->fetchColumn();
     }
 
     /**
