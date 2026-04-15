@@ -7,6 +7,9 @@ namespace App\Models;
 use App\Core\Database;
 use PDO;
 
+/**
+ * ModÃ¨le des trajets.
+ */
 final class Trip
 {
     private PDO $pdo;
@@ -17,6 +20,8 @@ final class Trip
     }
 
     /**
+     * Retourne les trajets disponibles pour la page d'accueil.
+     *
      * @return array<int, array<string, mixed>>
      */
     public function findAvailableTrips(): array
@@ -37,13 +42,21 @@ final class Trip
             ORDER BY t.date_depart ASC
         SQL;
 
+        $statement = $this->pdo->query($sql);
+
+        if ($statement === false) {
+            return [];
+        }
+
         /** @var array<int, array<string, mixed>> $trips */
-        $trips = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $trips = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         return $trips;
     }
 
     /**
+     * Retourne le dÃ©tail d'un trajet.
+     *
      * @return array<string, mixed>|null
      */
     public function findById(int $tripId): ?array
@@ -73,12 +86,12 @@ final class Trip
             LIMIT 1
         SQL;
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $tripId]);
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $tripId]);
 
-        $trip = $stmt->fetch(PDO::FETCH_ASSOC);
+        $trip = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if ($trip === false) {
+        if (!is_array($trip)) {
             return null;
         }
 
@@ -87,20 +100,26 @@ final class Trip
     }
 
     /**
+     * Retourne les agences.
+     *
      * @return array<int, array<string, mixed>>
      */
     public function findAgencies(): array
     {
+        $statement = $this->pdo->query('SELECT id, nom FROM agences ORDER BY nom ASC');
+
+        if ($statement === false) {
+            return [];
+        }
+
         /** @var array<int, array<string, mixed>> $agencies */
-        $agencies = $this->pdo
-            ->query('SELECT id, nom FROM agences ORDER BY nom')
-            ->fetchAll(PDO::FETCH_ASSOC);
+        $agencies = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         return $agencies;
     }
 
     /**
-     * Retourne la liste complète des trajets pour l'administration.
+     * Retourne la liste complÃ¨te des trajets pour l'administration.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -111,12 +130,13 @@ final class Trip
                 t.id,
                 ad.nom AS departure_agency,
                 aa.nom AS arrival_agency,
-                t.date_depart,
-                t.date_arrivee,
+                t.date_depart AS departure_datetime,
+                t.date_arrivee AS arrival_datetime,
                 t.places_total,
-                t.places_disponibles,
+                t.places_disponibles AS available_seats,
                 u.prenom AS author_first_name,
-                u.nom AS author_last_name
+                u.nom AS author_last_name,
+                u.email AS author_email
             FROM trajets t
             INNER JOIN agences ad ON ad.id = t.agence_depart_id
             INNER JOIN agences aa ON aa.id = t.agence_arrivee_id
@@ -124,13 +144,21 @@ final class Trip
             ORDER BY t.date_depart ASC
         SQL;
 
+        $statement = $this->pdo->query($sql);
+
+        if ($statement === false) {
+            return [];
+        }
+
         /** @var array<int, array<string, mixed>> $trips */
-        $trips = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $trips = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         return $trips;
     }
 
     /**
+     * CrÃ©e un trajet.
+     *
      * @param array<string, mixed> $data
      */
     public function create(array $data): int
@@ -155,13 +183,23 @@ final class Trip
             )
         SQL;
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($data);
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute([
+            'auteur_id' => $data['auteur_id'],
+            'agence_depart_id' => $data['agence_depart_id'],
+            'agence_arrivee_id' => $data['agence_arrivee_id'],
+            'date_depart' => $data['date_depart'],
+            'date_arrivee' => $data['date_arrivee'],
+            'places_total' => $data['places_total'],
+            'places_disponibles' => $data['places_disponibles'],
+        ]);
 
         return (int) $this->pdo->lastInsertId();
     }
 
     /**
+     * Met Ã  jour un trajet appartenant Ã  son auteur.
+     *
      * @param array<string, mixed> $data
      */
     public function update(int $tripId, int $authorId, array $data): bool
@@ -176,18 +214,27 @@ final class Trip
                 places_total = :places_total,
                 places_disponibles = :places_disponibles
             WHERE id = :id
-            AND auteur_id = :auteur_id
+              AND auteur_id = :auteur_id
         SQL;
 
-        $data['id'] = $tripId;
-        $data['auteur_id'] = $authorId;
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute([
+            'id' => $tripId,
+            'auteur_id' => $authorId,
+            'agence_depart_id' => $data['agence_depart_id'],
+            'agence_arrivee_id' => $data['agence_arrivee_id'],
+            'date_depart' => $data['date_depart'],
+            'date_arrivee' => $data['date_arrivee'],
+            'places_total' => $data['places_total'],
+            'places_disponibles' => $data['places_disponibles'],
+        ]);
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($data);
-
-        return $stmt->rowCount() > 0;
+        return $statement->rowCount() > 0;
     }
 
+    /**
+     * Supprime un trajet appartenant Ã  son auteur.
+     */
     public function delete(int $tripId, int $authorId): bool
     {
         $sql = <<<SQL
@@ -196,12 +243,26 @@ final class Trip
               AND auteur_id = :auteur_id
         SQL;
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute([
             'id' => $tripId,
             'auteur_id' => $authorId,
         ]);
 
-        return $stmt->rowCount() > 0;
+        return $statement->rowCount() > 0;
+    }
+
+    /**
+     * Supprime un trajet sans contrÃ´le d'auteur.
+     * UtilisÃ© uniquement par l'administration.
+     */
+    public function deleteById(int $tripId): bool
+    {
+        $statement = $this->pdo->prepare('DELETE FROM trajets WHERE id = :id');
+        $statement->execute([
+            'id' => $tripId,
+        ]);
+
+        return $statement->rowCount() > 0;
     }
 }
