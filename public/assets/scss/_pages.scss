@@ -1,0 +1,48 @@
+.home-intro {
+    margin-bottom: 1.75rem;
+}
+
+.dashboard-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.dashboard-link-card {
+    display: block;
+    padding: 1.25rem;
+    background: #ffffff;
+    border: 1px solid $border-color;
+    border-radius: $card-border-radius;
+    box-shadow: $box-shadow-sm;
+    color: $body-color;
+}
+
+.dashboard-link-card:hover {
+    transform: translateY(-1px);
+    box-shadow: $box-shadow;
+}
+
+.pagination-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.reservation-card {
+    height: 100%;
+}
+
+@media (max-width: 992px) {
+    .dashboard-links {
+        grid-template-columns: 1fr;
+    }
+
+    .site-shell,
+    .site-main {
+        width: min(100% - 1.5rem, 1180px);
+    }
+}

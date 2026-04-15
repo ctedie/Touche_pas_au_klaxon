@@ -2,47 +2,53 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../../Helpers/functions.php';
+
 $user = $_SESSION['user'] ?? null;
 $isAuthenticated = is_array($user);
 $isAdmin = $isAuthenticated && (($user['role'] ?? 'user') === 'admin');
 $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Touche pas au klaxon</title>
+    <link rel="stylesheet" href="<?= $escape(base_url('assets/css/app.css')) ?>">
 </head>
 <body>
-<header>
-    <div>
-        <a href="<?= $isAdmin ? '/touche-pas-au-klaxon/public/admin' : '/touche-pas-au-klaxon/public/' ?>">Touche pas au klaxon</a>
+    <div class="site-shell">
+        <header class="site-header px-4 py-3 mb-4">
+            <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
+                <a class="site-brand" href="<?= $escape($isAdmin ? base_url('admin') : base_url('')) ?>">Touche pas au klaxon</a>
+
+                <?php if ($isAdmin): ?>
+                    <div class="d-flex align-items-center gap-3 flex-wrap justify-content-end">
+                        <nav class="d-flex align-items-center gap-2 flex-wrap">
+                            <a class="btn btn-secondary" href="<?= $escape(base_url('admin/users')) ?>">Utilisateurs</a>
+                            <a class="btn btn-secondary" href="<?= $escape(base_url('admin/agencies')) ?>">Agences</a>
+                            <a class="btn btn-secondary" href="<?= $escape(base_url('admin/trips')) ?>">Trajets</a>
+                        </nav>
+                        <span class="fw-medium">
+                            Bonjour <?= $escape($user['prenom'] ?? '') ?> <?= $escape($user['nom'] ?? '') ?>
+                        </span>
+                        <a class="btn btn-dark" href="<?= $escape(base_url('logout')) ?>">DÃ©connexion</a>
+                    </div>
+                <?php elseif ($isAuthenticated): ?>
+                    <div class="d-flex align-items-center gap-3 flex-wrap justify-content-end">
+                        <a class="btn btn-dark" href="<?= $escape(base_url('trip/create')) ?>">CrÃ©er un trajet</a>
+                        <a class="btn btn-outline-secondary" href="<?= $escape(base_url('reservations')) ?>">Mes rÃ©servations</a>
+                        <span class="fw-medium">
+                            Bonjour <?= $escape($user['prenom'] ?? '') ?> <?= $escape($user['nom'] ?? '') ?>
+                        </span>
+                        <a class="btn btn-dark" href="<?= $escape(base_url('logout')) ?>">DÃ©connexion</a>
+                    </div>
+                <?php else: ?>
+                    <a class="btn btn-dark" href="<?= $escape(base_url('login')) ?>">Connexion</a>
+                <?php endif; ?>
+            </div>
+        </header>
     </div>
 
-    <div>
-        <?php if ($isAdmin): ?>
-            <nav>
-                <a href="/touche-pas-au-klaxon/public/admin/users">Utilisateurs</a>
-                <a href="/touche-pas-au-klaxon/public/admin/agencies">Agences</a>
-                <a href="/touche-pas-au-klaxon/public/admin/trips">Trajets</a>
-            </nav>
-            <span>
-                <?= $escape($user['prenom'] ?? '') ?>
-                <?= $escape($user['nom'] ?? '') ?>
-            </span>
-            <a href="/touche-pas-au-klaxon/public/logout">DÃ©connexion</a>
-        <?php elseif ($isAuthenticated): ?>
-            <a href="/touche-pas-au-klaxon/public/trip/create">Proposer un trajet</a>
-            <a href="/touche-pas-au-klaxon/public/reservations">Mes rÃ©servations</a>
-            <span>
-                <?= $escape($user['prenom'] ?? '') ?>
-                <?= $escape($user['nom'] ?? '') ?>
-            </span>
-            <a href="/touche-pas-au-klaxon/public/logout">DÃ©connexion</a>
-        <?php else: ?>
-            <a href="/touche-pas-au-klaxon/public/login">Connexion</a>
-        <?php endif; ?>
-    </div>
-</header>
-<main>
+    <main class="site-main pb-4">

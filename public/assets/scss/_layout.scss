@@ -1,0 +1,42 @@
+.site-shell {
+    width: min(1180px, calc(100% - 3rem));
+    margin: 1rem auto 0;
+}
+
+.site-header {
+    border: 2px solid $secondary;
+    border-radius: 1.5rem;
+    background: #f3f4f6;
+    box-shadow: $box-shadow-sm;
+}
+
+.site-brand {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $body-color;
+}
+
+.site-header .nav-link {
+    color: $body-color;
+    font-weight: 500;
+}
+
+.site-header .nav-link:hover,
+.site-header .nav-link:focus {
+    color: $primary;
+}
+
+.site-header .btn {
+    min-width: 10rem;
+}
+
+.site-main {
+    width: min(1180px, calc(100% - 3rem));
+    margin: 0 auto;
+}
+
+.site-footer {
+    padding: 2.5rem 0 1.5rem;
+    text-align: center;
+    color: $body-color;
+}

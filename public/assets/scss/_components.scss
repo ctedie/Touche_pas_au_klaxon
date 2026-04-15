@@ -1,0 +1,37 @@
+.btn {
+    font-weight: 500;
+}
+
+.btn-primary,
+.btn-dark {
+    box-shadow: $box-shadow-sm;
+}
+
+.flash-stack {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    border-radius: $border-radius;
+    box-shadow: $box-shadow-sm;
+}
+
+.section-card {
+    background: #ffffff;
+    border: 1px solid $border-color;
+    border-radius: $card-border-radius;
+    box-shadow: $box-shadow-sm;
+}
+
+.badge-soft {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(17, 24, 39, 0.08);
+    color: $body-color;
+    font-size: 0.875rem;
+    font-weight: 600;
+}

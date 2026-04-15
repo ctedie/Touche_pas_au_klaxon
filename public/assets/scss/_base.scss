@@ -1,0 +1,40 @@
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+a {
+    text-decoration: none;
+}
+
+.page-section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.page-title {
+    margin-bottom: 1.5rem;
+}
+
+.surface-card {
+    background: #ffffff;
+    border: 1px solid $border-color;
+    border-radius: $card-border-radius;
+    box-shadow: $box-shadow-sm;
+}
+
+.empty-state {
+    padding: 1.5rem;
+    background: #ffffff;
+    border: 1px solid $border-color;
+    border-radius: $card-border-radius;
+}

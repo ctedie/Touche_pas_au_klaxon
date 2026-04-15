@@ -10,37 +10,41 @@ require __DIR__ . '/../partials/flash.php';
 $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 ?>
 
-<div class="container py-4">
-    <h1 class="mb-4">Liste des utilisateurs</h1>
+<section class="page-section">
+    <h1 class="page-title">Liste des utilisateurs</h1>
 
     <?php if ($users === []): ?>
-        <p>Aucun utilisateur trouvé.</p>
+        <div class="empty-state">
+            <p class="mb-0">Aucun utilisateur trouvÃ©.</p>
+        </div>
     <?php else: ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Rôle</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($users as $user): ?>
+        <div class="table-wrap table-responsive">
+            <table class="table table-striped table-hover table-app align-middle mb-0">
+                <thead>
                     <tr>
-                        <td><?= (int) ($user['id'] ?? 0) ?></td>
-                        <td><?= $escape($user['nom'] ?? '') ?></td>
-                        <td><?= $escape($user['prenom'] ?? '') ?></td>
-                        <td><?= $escape($user['email'] ?? '') ?></td>
-                        <td><?= $escape($user['telephone'] ?? '') ?></td>
-                        <td><?= $escape($user['role'] ?? '') ?></td>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>PrÃ©nom</th>
+                        <th>Email</th>
+                        <th>TÃ©lÃ©phone</th>
+                        <th>RÃ´le</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($users as $user): ?>
+                        <tr>
+                            <td><?= (int) ($user['id'] ?? 0) ?></td>
+                            <td><?= $escape($user['nom'] ?? '') ?></td>
+                            <td><?= $escape($user['prenom'] ?? '') ?></td>
+                            <td><?= $escape($user['email'] ?? '') ?></td>
+                            <td><?= $escape($user['telephone'] ?? '') ?></td>
+                            <td><span class="badge text-bg-secondary"><?= $escape($user['role'] ?? '') ?></span></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     <?php endif; ?>
-</div>
+</section>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>
