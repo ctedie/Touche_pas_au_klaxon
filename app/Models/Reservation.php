@@ -15,9 +15,9 @@ final class Reservation
 {
     private PDO $pdo;
 
-    public function __construct()
+    public function __construct(?PDO $pdo = null)
     {
-        $this->pdo = Database::getConnection();
+        $this->pdo = $pdo ?? Database::getConnection();
     }
 
     /**

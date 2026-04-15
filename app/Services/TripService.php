@@ -19,10 +19,10 @@ final class TripService
 
     private Reservation $reservationModel;
 
-    public function __construct()
+    public function __construct(?Trip $tripModel = null, ?Reservation $reservationModel = null)
     {
-        $this->tripModel = new Trip();
-        $this->reservationModel = new Reservation();
+        $this->tripModel = $tripModel ?? new Trip();
+        $this->reservationModel = $reservationModel ?? new Reservation();
     }
 
     /**
