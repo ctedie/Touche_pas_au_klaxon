@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -15,6 +16,9 @@ final class Trip
         $this->pdo = Database::getConnection();
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function findAvailableTrips(): array
     {
         $sql = <<<SQL
@@ -33,9 +37,15 @@ final class Trip
             ORDER BY t.date_depart ASC
         SQL;
 
-        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        /** @var array<int, array<string, mixed>> $trips */
+        $trips = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+        return $trips;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function findById(int $tripId): ?array
     {
         $sql = <<<SQL
@@ -66,16 +76,32 @@ final class Trip
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $tripId]);
 
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $trip = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($trip === false) {
+            return null;
+        }
+
+        /** @var array<string, mixed> $trip */
+        return $trip;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function findAgencies(): array
     {
-        return $this->pdo
-            ->query("SELECT id, nom FROM agences ORDER BY nom")
+        /** @var array<int, array<string, mixed>> $agencies */
+        $agencies = $this->pdo
+            ->query('SELECT id, nom FROM agences ORDER BY nom')
             ->fetchAll(PDO::FETCH_ASSOC);
+
+        return $agencies;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function create(array $data): int
     {
         $sql = <<<SQL
@@ -104,6 +130,9 @@ final class Trip
         return (int) $this->pdo->lastInsertId();
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function update(int $tripId, int $authorId, array $data): bool
     {
         $sql = <<<SQL
@@ -119,11 +148,28 @@ final class Trip
             AND auteur_id = :auteur_id
         SQL;
 
-        $data["id"] = $tripId;
-        $data["auteur_id"] = $authorId;
+        $data['id'] = $tripId;
+        $data['auteur_id'] = $authorId;
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($data);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    public function delete(int $tripId, int $authorId): bool
+    {
+        $sql = <<<SQL
+            DELETE FROM trajets
+            WHERE id = :id
+              AND auteur_id = :auteur_id
+        SQL;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'id' => $tripId,
+            'auteur_id' => $authorId,
+        ]);
 
         return $stmt->rowCount() > 0;
     }
