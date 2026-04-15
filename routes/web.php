@@ -21,4 +21,5 @@ return [
     $basePath . '/trip/show' => [TripController::class, 'show'],
     $basePath . '/trip/edit' => [TripController::class, 'edit'],
     $basePath . '/trip/update' => [TripController::class, 'update'],
+    $basePath . '/trip/delete' => [TripController::class, 'delete'],
 ];

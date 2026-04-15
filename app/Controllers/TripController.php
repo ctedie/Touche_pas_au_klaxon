@@ -7,7 +7,7 @@ namespace App\Controllers;
 use App\Services\TripService;
 
 /**
- * ContrÃƒÂ´leur des trajets.
+ * ContrÃ´leur des trajets.
  */
 final class TripController extends Controller
 {
@@ -19,9 +19,7 @@ final class TripController extends Controller
     }
 
     /**
-     * Affiche le dÃƒÂ©tail d'un trajet.
-     *
-     * @return void
+     * Affiche le dÃ©tail d'un trajet.
      */
     public function show(): void
     {
@@ -48,9 +46,7 @@ final class TripController extends Controller
     }
 
     /**
-     * Affiche le formulaire de crÃƒÂ©ation.
-     *
-     * @return void
+     * Affiche le formulaire de crÃ©ation.
      */
     public function create(): void
     {
@@ -73,8 +69,6 @@ final class TripController extends Controller
 
     /**
      * Enregistre un trajet.
-     *
-     * @return void
      */
     public function store(): void
     {
@@ -94,14 +88,12 @@ final class TripController extends Controller
 
         $tripId = $this->tripService->createTrip($validation['data'], (int) $user['id']);
 
-        $_SESSION['flash_success'] = 'Le trajet a bien ÃƒÂ©tÃƒÂ© crÃƒÂ©ÃƒÂ©.';
+        $_SESSION['flash_success'] = 'Le trajet a bien Ã©tÃ© crÃ©Ã©.';
         $this->redirect('/trip/show?id=' . $tripId);
     }
 
     /**
      * Affiche le formulaire de modification.
-     *
-     * @return void
      */
     public function edit(): void
     {
@@ -123,7 +115,7 @@ final class TripController extends Controller
 
         if ((int) $trip['author_id'] !== (int) $user['id']) {
             http_response_code(403);
-            echo 'Vous nÃ¢â‚¬â„¢ÃƒÂªtes pas autorisÃƒÂ© ÃƒÂ  modifier ce trajet.';
+            echo 'Vous nâ€™Ãªtes pas autorisÃ© Ã  modifier ce trajet.';
             return;
         }
 
@@ -137,9 +129,7 @@ final class TripController extends Controller
     }
 
     /**
-     * Met ÃƒÂ  jour un trajet.
-     *
-     * @return void
+     * Met Ã  jour un trajet.
      */
     public function update(): void
     {
@@ -161,7 +151,7 @@ final class TripController extends Controller
 
         if ((int) $trip['author_id'] !== (int) $user['id']) {
             http_response_code(403);
-            echo 'Vous nÃ¢â‚¬â„¢ÃƒÂªtes pas autorisÃƒÂ© ÃƒÂ  modifier ce trajet.';
+            echo 'Vous nâ€™Ãªtes pas autorisÃ© Ã  modifier ce trajet.';
             return;
         }
 
@@ -180,12 +170,49 @@ final class TripController extends Controller
 
         $this->tripService->updateTrip($tripId, (int) $user['id'], $validation['data']);
 
-        $_SESSION['flash_success'] = 'Le trajet a bien ÃƒÂ©tÃƒÂ© modifiÃƒÂ©.';
+        $_SESSION['flash_success'] = 'Le trajet a bien Ã©tÃ© modifiÃ©.';
         $this->redirect('/trip/show?id=' . $tripId);
     }
 
     /**
-     * Retourne l'utilisateur connectÃƒÂ©.
+     * Supprime un trajet.
+     */
+    public function delete(): void
+    {
+        $user = $this->requireAuthenticatedUser();
+
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+            $this->redirect('/');
+        }
+
+        $tripId = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+        if ($tripId <= 0) {
+            http_response_code(404);
+            echo 'Trajet introuvable.';
+            return;
+        }
+
+        $trip = $this->tripService->getTripById($tripId);
+        if ($trip === null) {
+            http_response_code(404);
+            echo 'Trajet introuvable.';
+            return;
+        }
+
+        if ((int) $trip['author_id'] !== (int) $user['id']) {
+            http_response_code(403);
+            echo 'Vous nâ€™Ãªtes pas autorisÃ© Ã  supprimer ce trajet.';
+            return;
+        }
+
+        $this->tripService->deleteTrip($tripId, (int) $user['id']);
+
+        $_SESSION['flash_success'] = 'Le trajet a bien Ã©tÃ© supprimÃ©.';
+        $this->redirect('/');
+    }
+
+    /**
+     * Retourne l'utilisateur connectÃ©.
      *
      * @return array<string, mixed>
      */
@@ -205,5 +232,4 @@ final class TripController extends Controller
             'phone' => (string) ($user['phone'] ?? $user['telephone'] ?? ''),
         ];
     }
-
 }

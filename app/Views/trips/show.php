@@ -40,7 +40,7 @@ unset($_SESSION['flash_success']);
                 <dd class="col-sm-8"><?= $escape($trip['date_arrivee'] ?? '') ?></dd>
 
                 <dt class="col-sm-4">Places totales</dt>
-                <dd class="col-sm-8"><?= $escape($trip['places_totales'] ?? '') ?></dd>
+                <dd class="col-sm-8"><?= $escape($trip['places_total'] ?? '') ?></dd>
 
                 <dt class="col-sm-4">Places disponibles</dt>
                 <dd class="col-sm-8"><?= $escape($trip['places_disponibles'] ?? '') ?></dd>
@@ -66,6 +66,16 @@ unset($_SESSION['flash_success']);
             <a href="<?= $basePath ?>/trip/edit?id=<?= (int) $trip['id'] ?>" class="btn btn-primary">
                 Modifier
             </a>
+
+            <form
+                action="<?= $basePath ?>/trip/delete"
+                method="post"
+                class="d-inline"
+                onsubmit="return confirm('Confirmer la suppression dÃ©finitive de ce trajet ?');"
+            >
+                <input type="hidden" name="id" value="<?= (int) $trip['id'] ?>">
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
         <?php endif; ?>
     </div>
 </div>

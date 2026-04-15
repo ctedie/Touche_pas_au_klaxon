@@ -8,7 +8,7 @@ use App\Models\Trip;
 use DateTimeImmutable;
 
 /**
- * Service mÃƒÂ©tier des trajets.
+ * Service mÃ©tier des trajets.
  */
 final class TripService
 {
@@ -30,9 +30,8 @@ final class TripService
     }
 
     /**
-     * Retourne le dÃƒÂ©tail d'un trajet.
+     * Retourne le dÃ©tail d'un trajet.
      *
-     * @param int $tripId
      * @return array<string, mixed>|null
      */
     public function getTripById(int $tripId): ?array
@@ -51,7 +50,7 @@ final class TripService
     }
 
     /**
-     * Valide et normalise les donnÃƒÂ©es du formulaire.
+     * Valide et normalise les donnÃ©es du formulaire.
      *
      * @param array<string, mixed> $input
      * @return array{
@@ -73,11 +72,11 @@ final class TripService
         $errors = [];
 
         if ($data['agence_depart_id'] <= 0) {
-            $errors['agence_depart_id'] = 'Veuillez sÃƒÂ©lectionner une agence de dÃƒÂ©part.';
+            $errors['agence_depart_id'] = 'Veuillez sÃ©lectionner une agence de dÃ©part.';
         }
 
         if ($data['agence_arrivee_id'] <= 0) {
-            $errors['agence_arrivee_id'] = 'Veuillez sÃƒÂ©lectionner une agence dÃ¢â‚¬â„¢arrivÃƒÂ©e.';
+            $errors['agence_arrivee_id'] = 'Veuillez sÃ©lectionner une agence dâ€™arrivÃ©e.';
         }
 
         if (
@@ -85,7 +84,7 @@ final class TripService
             && $data['agence_arrivee_id'] > 0
             && $data['agence_depart_id'] === $data['agence_arrivee_id']
         ) {
-            $errors['agence_arrivee_id'] = 'LÃ¢â‚¬â„¢agence dÃ¢â‚¬â„¢arrivÃƒÂ©e doit ÃƒÂªtre diffÃƒÂ©rente de lÃ¢â‚¬â„¢agence de dÃƒÂ©part.';
+            $errors['agence_arrivee_id'] = 'Lâ€™agence dâ€™arrivÃ©e doit Ãªtre diffÃ©rente de lâ€™agence de dÃ©part.';
         }
 
         $departureDate = $this->createDateTime($data['date_depart']);
@@ -93,48 +92,42 @@ final class TripService
         $now = new DateTimeImmutable();
 
         if ($departureDate === null) {
-            $errors['date_depart'] = 'Veuillez saisir une date de dÃƒÂ©part valide.';
+            $errors['date_depart'] = 'Veuillez saisir une date de dÃ©part valide.';
         }
 
         if ($arrivalDate === null) {
-            $errors['date_arrivee'] = 'Veuillez saisir une date dÃ¢â‚¬â„¢arrivÃƒÂ©e valide.';
+            $errors['date_arrivee'] = 'Veuillez saisir une date dâ€™arrivÃ©e valide.';
         }
 
         if ($departureDate !== null && $departureDate < $now) {
-            $errors['date_depart'] = 'La date de dÃƒÂ©part doit ÃƒÂªtre dans le futur.';
+            $errors['date_depart'] = 'La date de dÃ©part doit Ãªtre dans le futur.';
         }
 
         if ($departureDate !== null && $arrivalDate !== null && $arrivalDate <= $departureDate) {
-            $errors['date_arrivee'] = 'La date dÃ¢â‚¬â„¢arrivÃƒÂ©e doit ÃƒÂªtre postÃƒÂ©rieure ÃƒÂ  la date de dÃƒÂ©part.';
+            $errors['date_arrivee'] = 'La date dâ€™arrivÃ©e doit Ãªtre postÃ©rieure Ã  la date de dÃ©part.';
         }
 
         if ($data['places_total'] <= 0) {
-            $errors['places_total'] = 'Le nombre total de places doit ÃƒÂªtre supÃƒÂ©rieur ÃƒÂ  0.';
+            $errors['places_total'] = 'Le nombre total de places doit Ãªtre supÃ©rieur Ã  0.';
         }
 
         if ($data['places_disponibles'] < 0) {
-            $errors['places_disponibles'] = 'Le nombre de places disponibles ne peut pas ÃƒÂªtre nÃƒÂ©gatif.';
+            $errors['places_disponibles'] = 'Le nombre de places disponibles ne peut pas Ãªtre nÃ©gatif.';
         }
 
         if (
             $data['places_total'] > 0
             && $data['places_disponibles'] > $data['places_total']
         ) {
-            $errors['places_disponibles'] = 'Le nombre de places disponibles ne peut pas dÃƒÂ©passer le nombre total de places.';
+            $errors['places_disponibles'] = 'Le nombre de places disponibles ne peut pas dÃ©passer le nombre total de places.';
         }
 
         if ($departureDate !== null) {
             $data['date_depart'] = $departureDate->format('Y-m-d H:i:s');
-            $data['date_depart_form'] = $departureDate->format('Y-m-d\TH:i');
-        } else {
-            $data['date_depart_form'] = trim((string) ($input['date_depart'] ?? ''));
         }
 
         if ($arrivalDate !== null) {
             $data['date_arrivee'] = $arrivalDate->format('Y-m-d H:i:s');
-            $data['date_arrivee_form'] = $arrivalDate->format('Y-m-d\TH:i');
-        } else {
-            $data['date_arrivee_form'] = trim((string) ($input['date_arrivee'] ?? ''));
         }
 
         return [
@@ -144,52 +137,29 @@ final class TripService
     }
 
     /**
-     * CrÃƒÂ©e un trajet.
-     *
-     * @param array<string, mixed> $validatedData
-     * @param int $userId
-     * @return int
+     * @param array<string, mixed> $data
      */
-    public function createTrip(array $validatedData, int $userId): int
+    public function createTrip(array $data, int $userId): int
     {
-        $payload = [
-            'auteur_id' => $userId,
-            'agence_depart_id' => (int) $validatedData['agence_depart_id'],
-            'agence_arrivee_id' => (int) $validatedData['agence_arrivee_id'],
-            'date_depart' => (string) $validatedData['date_depart'],
-            'date_arrivee' => (string) $validatedData['date_arrivee'],
-            'places_total' => (int) $validatedData['places_total'],
-            'places_disponibles' => (int) $validatedData['places_disponibles'],
-        ];
+        $data['auteur_id'] = $userId;
 
-        return $this->tripModel->create($payload);
+        return $this->tripModel->create($data);
     }
 
     /**
-     * Met ÃƒÂ  jour un trajet.
-     *
-     * @param int $tripId
-     * @param int $userId
-     * @param array<string, mixed> $validatedData
-     * @return bool
+     * @param array<string, mixed> $data
      */
-    public function updateTrip(int $tripId, int $userId, array $validatedData): bool
+    public function updateTrip(int $tripId, int $userId, array $data): bool
     {
-        $payload = [
-            'agence_depart_id' => (int) $validatedData['agence_depart_id'],
-            'agence_arrivee_id' => (int) $validatedData['agence_arrivee_id'],
-            'date_depart' => (string) $validatedData['date_depart'],
-            'date_arrivee' => (string) $validatedData['date_arrivee'],
-            'places_total' => (int) $validatedData['places_total'],
-            'places_disponibles' => (int) $validatedData['places_disponibles'],
-        ];
+        return $this->tripModel->update($tripId, $userId, $data);
+    }
 
-        return $this->tripModel->update($tripId, $userId, $payload);
+    public function deleteTrip(int $tripId, int $userId): bool
+    {
+        return $this->tripModel->delete($tripId, $userId);
     }
 
     /**
-     * PrÃƒÂ©pare les donnÃƒÂ©es d'un trajet pour le formulaire.
-     *
      * @param array<string, mixed> $trip
      * @return array<string, mixed>
      */
@@ -198,19 +168,13 @@ final class TripService
         return [
             'agence_depart_id' => (int) ($trip['agence_depart_id'] ?? 0),
             'agence_arrivee_id' => (int) ($trip['agence_arrivee_id'] ?? 0),
-            'date_depart_form' => $this->formatDateTimeForForm((string) ($trip['date_depart'] ?? '')),
-            'date_arrivee_form' => $this->formatDateTimeForForm((string) ($trip['date_arrivee'] ?? '')),
-            'places_total' => (int) ($trip['places_total'] ?? 0),
-            'places_disponibles' => (int) ($trip['places_disponibles'] ?? 0),
+            'date_depart' => $this->formatForDateTimeLocal($trip['date_depart'] ?? null),
+            'date_arrivee' => $this->formatForDateTimeLocal($trip['date_arrivee'] ?? null),
+            'places_total' => (int) ($trip['places_total'] ?? 1),
+            'places_disponibles' => (int) ($trip['places_disponibles'] ?? 1),
         ];
     }
 
-    /**
-     * Convertit une date HTML datetime-local en DateTimeImmutable.
-     *
-     * @param string $value
-     * @return DateTimeImmutable|null
-     */
     private function createDateTime(string $value): ?DateTimeImmutable
     {
         if ($value === '') {
@@ -219,18 +183,16 @@ final class TripService
 
         $date = DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $value);
 
-        return $date instanceof DateTimeImmutable ? $date : null;
+        if ($date instanceof DateTimeImmutable) {
+            return $date;
+        }
+
+        return new DateTimeImmutable($value);
     }
 
-    /**
-     * Formate une date SQL pour un champ datetime-local.
-     *
-     * @param string $value
-     * @return string
-     */
-    private function formatDateTimeForForm(string $value): string
+    private function formatForDateTimeLocal(mixed $value): string
     {
-        if ($value === '') {
+        if (!is_string($value) || $value === '') {
             return '';
         }
 
