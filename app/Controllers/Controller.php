@@ -7,7 +7,7 @@ namespace App\Controllers;
 use App\Core\View;
 
 /**
- * ContrÃ´leur de base.
+ * Contrôleur de base.
  */
 abstract class Controller
 {
@@ -59,5 +59,31 @@ abstract class Controller
         if ($this->getAuthenticatedUser() !== null) {
             $this->redirect('/');
         }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function requireAdmin(): array
+    {
+        $user = $this->getAuthenticatedUser();
+
+        if ($user === null) {
+            $this->redirect('/login');
+        }
+
+        if (($user['role'] ?? 'user') !== 'admin') {
+            $_SESSION['flash_error'] = 'Accès refusé : cette page est réservée aux administrateurs.';
+            $this->redirect('/');
+        }
+
+        return $user;
+    }
+
+    protected function isAdmin(): bool
+    {
+        $user = $this->getAuthenticatedUser();
+
+        return is_array($user) && ($user['role'] ?? 'user') === 'admin';
     }
 }

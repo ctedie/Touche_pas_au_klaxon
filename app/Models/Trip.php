@@ -100,6 +100,37 @@ final class Trip
     }
 
     /**
+     * Retourne la liste complète des trajets pour l'administration.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function findAllForAdmin(): array
+    {
+        $sql = <<<SQL
+            SELECT
+                t.id,
+                ad.nom AS departure_agency,
+                aa.nom AS arrival_agency,
+                t.date_depart,
+                t.date_arrivee,
+                t.places_total,
+                t.places_disponibles,
+                u.prenom AS author_first_name,
+                u.nom AS author_last_name
+            FROM trajets t
+            INNER JOIN agences ad ON ad.id = t.agence_depart_id
+            INNER JOIN agences aa ON aa.id = t.agence_arrivee_id
+            INNER JOIN utilisateurs u ON u.id = t.auteur_id
+            ORDER BY t.date_depart ASC
+        SQL;
+
+        /** @var array<int, array<string, mixed>> $trips */
+        $trips = $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+        return $trips;
+    }
+
+    /**
      * @param array<string, mixed> $data
      */
     public function create(array $data): int

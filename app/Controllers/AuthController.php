@@ -7,7 +7,7 @@ namespace App\Controllers;
 use App\Models\User;
 
 /**
- * ContrÃ´leur d''authentification.
+ * ContrÃƒÂ´leur d''authentification.
  */
 final class AuthController extends Controller
 {
@@ -29,7 +29,7 @@ final class AuthController extends Controller
 
         if ($email === '' || $password === '') {
             $_SESSION['flash_error'] = 'Veuillez renseigner votre email et votre mot de passe.';
-            $this->redirect('/login');
+            $this->redirect('/');
         }
 
         $userModel = new User();
@@ -37,21 +37,21 @@ final class AuthController extends Controller
 
         if ($user === null) {
             $_SESSION['flash_error'] = 'Identifiants invalides.';
-            $this->redirect('/login');
+            $this->redirect('/');
         }
 
         $storedPassword = $user['mot_de_passe'] ?? null;
 
         if (!is_string($storedPassword)) {
             $_SESSION['flash_error'] = 'Identifiants invalides.';
-            $this->redirect('/login');
+            $this->redirect('/');
         }
 
         $isValidPassword = password_verify($password, $storedPassword) || $password === $storedPassword;
 
         if (!$isValidPassword) {
             $_SESSION['flash_error'] = 'Identifiants invalides.';
-            $this->redirect('/login');
+            $this->redirect('/');
         }
 
         $_SESSION['user'] = [
@@ -68,6 +68,6 @@ final class AuthController extends Controller
     public function logout(): void
     {
         unset($_SESSION['user']);
-        $this->redirect('/login');
+        $this->redirect('/');
     }
 }
