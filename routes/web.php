@@ -27,5 +27,11 @@ return [
     $basePath . '/admin' => [AdminController::class, 'dashboard'],
     $basePath . '/admin/users' => [AdminController::class, 'users'],
     $basePath . '/admin/agencies' => [AdminController::class, 'agencies'],
+    $basePath . '/admin/agencies/create' => [AdminController::class, 'createAgency'],
+    $basePath . '/admin/agencies/store' => [AdminController::class, 'storeAgency'],
+    $basePath . '/admin/agencies/edit' => [AdminController::class, 'editAgency'],
+    $basePath . '/admin/agencies/update' => [AdminController::class, 'updateAgency'],
+    $basePath . '/admin/agencies/delete' => [AdminController::class, 'deleteAgency'],
     $basePath . '/admin/trips' => [AdminController::class, 'trips'],
+    $basePath . '/admin/trips/delete' => [AdminController::class, 'deleteTrip'],
 ];
