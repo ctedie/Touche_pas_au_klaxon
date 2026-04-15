@@ -15,12 +15,12 @@ $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, 
 <section class="page-section">
     <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-4">
         <h1 class="page-title mb-0">Liste des agences</h1>
-        <a class="btn btn-dark" href="<?= $escape(base_url('admin/agencies/create')) ?>">CrÃ©er une agence</a>
+        <a class="btn btn-dark" href="<?= $escape(base_url('admin/agencies/create')) ?>">Créer une agence</a>
     </div>
 
     <?php if ($agencies === []): ?>
         <div class="empty-state">
-            <p class="mb-0">Aucune agence trouvÃ©e.</p>
+            <p class="mb-0">Aucune agence trouvée.</p>
         </div>
     <?php else: ?>
         <div class="table-wrap table-responsive">

@@ -9,7 +9,7 @@ use PDO;
 use Throwable;
 
 /**
- * ModÃ¨le des rÃ©servations.
+ * Modèle des réservations.
  */
 final class Reservation
 {
@@ -21,7 +21,7 @@ final class Reservation
     }
 
     /**
-     * Retourne les rÃ©servations d'un utilisateur.
+     * Retourne les réservations d'un utilisateur.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -63,7 +63,7 @@ final class Reservation
     }
 
     /**
-     * VÃ©rifie si l'utilisateur a dÃ©jÃ  rÃ©servÃ© ce trajet.
+     * Vérifie si l'utilisateur a déjà réservé ce trajet.
      */
     public function existsForUserAndTrip(int $userId, int $tripId): bool
     {
@@ -79,7 +79,7 @@ final class Reservation
     }
 
     /**
-     * RÃ©serve une place sur un trajet.
+     * Réserve une place sur un trajet.
      */
     public function create(int $userId, int $tripId): bool
     {
@@ -134,7 +134,7 @@ final class Reservation
     }
 
     /**
-     * Annule une rÃ©servation et libÃ¨re une place.
+     * Annule une réservation et libère une place.
      */
     public function delete(int $reservationId, int $userId): bool
     {

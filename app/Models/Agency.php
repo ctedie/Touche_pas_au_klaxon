@@ -8,7 +8,7 @@ use App\Core\Database;
 use PDO;
 
 /**
- * ModÃ¨le des agences.
+ * Modèle des agences.
  */
 final class Agency
 {
@@ -20,7 +20,7 @@ final class Agency
     }
 
     /**
-     * Retourne la liste des agences triÃ©es par nom.
+     * Retourne la liste des agences triées par nom.
      *
      * @return array<int, array{id:int, nom:string}>
      */

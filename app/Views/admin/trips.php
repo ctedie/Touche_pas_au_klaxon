@@ -20,7 +20,7 @@ $totalPages = (int) ($pagination['total_pages'] ?? 1);
 
     <?php if ($trips === []): ?>
         <div class="empty-state">
-            <p class="mb-0">Aucun trajet trouvÃ©.</p>
+            <p class="mb-0">Aucun trajet trouvé.</p>
         </div>
     <?php else: ?>
         <div class="table-wrap table-responsive">
@@ -28,10 +28,10 @@ $totalPages = (int) ($pagination['total_pages'] ?? 1);
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>DÃ©part</th>
-                        <th>ArrivÃ©e</th>
-                        <th>Date dÃ©part</th>
-                        <th>Date arrivÃ©e</th>
+                        <th>Départ</th>
+                        <th>Arrivée</th>
+                        <th>Date départ</th>
+                        <th>Date arrivée</th>
                         <th>Places</th>
                         <th>Auteur</th>
                         <th>Action</th>
@@ -68,7 +68,7 @@ $totalPages = (int) ($pagination['total_pages'] ?? 1);
                 <ul class="pagination mb-0">
                     <?php if (!empty($pagination['has_previous_page'])): ?>
                         <li class="page-item">
-                            <a class="page-link" href="<?= $escape(base_url('admin/trips?page=' . (string) $pagination['previous_page'])) ?>">PrÃ©cÃ©dente</a>
+                            <a class="page-link" href="<?= $escape(base_url('admin/trips?page=' . (string) $pagination['previous_page'])) ?>">Précédente</a>
                         </li>
                     <?php endif; ?>
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Core\Session;
 
 /**
- * Ã‰chappe une chaÃ®ne pour l'affichage HTML.
+ * Échappe une chaîne pour l'affichage HTML.
  */
 function e(?string $value): string
 {
@@ -34,7 +34,7 @@ function base_url(string $path = ''): string
 }
 
 /**
- * Indique si un utilisateur est connectÃ©.
+ * Indique si un utilisateur est connecté.
  */
 function is_authenticated(): bool
 {
@@ -42,7 +42,7 @@ function is_authenticated(): bool
 }
 
 /**
- * Retourne l'utilisateur connectÃ©.
+ * Retourne l'utilisateur connecté.
  *
  * @return array<string, mixed>|null
  */

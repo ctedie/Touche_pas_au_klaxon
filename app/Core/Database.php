@@ -9,14 +9,14 @@ use PDOException;
 use RuntimeException;
 
 /**
- * GÃ¨re la connexion Ã  la base de donnÃ©es via PDO.
+ * Gère la connexion à la base de données via PDO.
  */
 final class Database
 {
     private static ?PDO $connection = null;
 
     /**
-     * DÃ©finit une connexion PDO spÃ©cifique.
+     * Définit une connexion PDO spécifique.
      */
     public static function setConnection(PDO $connection): void
     {
@@ -24,7 +24,7 @@ final class Database
     }
 
     /**
-     * RÃ©initialise la connexion mÃ©morisÃ©e.
+     * Réinitialise la connexion mémorisée.
      */
     public static function resetConnection(): void
     {
@@ -50,7 +50,7 @@ final class Database
         $config = require $configPath;
 
         if (!isset($config['db']) || !is_array($config['db'])) {
-            throw new RuntimeException('La configuration de la base de donnÃ©es est invalide.');
+            throw new RuntimeException('La configuration de la base de données est invalide.');
         }
 
         /** @var array<string, mixed> $dbConfig */
@@ -64,7 +64,7 @@ final class Database
         $password = (string) ($dbConfig['password'] ?? '');
 
         if ($host === '' || $dbname === '' || $username === '') {
-            throw new RuntimeException('Les paramÃ¨tres de connexion Ã  la base sont incomplets.');
+            throw new RuntimeException('Les paramètres de connexion à la base sont incomplets.');
         }
 
         $dsn = sprintf(
@@ -83,7 +83,7 @@ final class Database
             ]);
         } catch (PDOException $exception) {
             throw new RuntimeException(
-                'Connexion Ã  la base de donnÃ©es impossible : ' . $exception->getMessage(),
+                'Connexion à la base de données impossible : ' . $exception->getMessage(),
                 0,
                 $exception
             );

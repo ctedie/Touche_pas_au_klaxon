@@ -9,7 +9,7 @@ use App\Models\Trip;
 use DateTimeImmutable;
 
 /**
- * Service mÃ©tier des trajets.
+ * Service métier des trajets.
  */
 final class TripService
 {
@@ -56,7 +56,7 @@ final class TripService
     }
 
     /**
-     * Retourne le dÃ©tail d'un trajet.
+     * Retourne le détail d'un trajet.
      *
      * @return array<string, mixed>|null
      */
@@ -76,7 +76,7 @@ final class TripService
     }
 
     /**
-     * Retourne les rÃ©servations d'un utilisateur.
+     * Retourne les réservations d'un utilisateur.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -86,7 +86,7 @@ final class TripService
     }
 
     /**
-     * VÃ©rifie si l'utilisateur a dÃ©jÃ  rÃ©servÃ© ce trajet.
+     * Vérifie si l'utilisateur a déjà réservé ce trajet.
      */
     public function hasUserReservedTrip(int $userId, int $tripId): bool
     {
@@ -94,7 +94,7 @@ final class TripService
     }
 
     /**
-     * Valide et normalise les donnÃ©es du formulaire.
+     * Valide et normalise les données du formulaire.
      *
      * @param array<string, mixed> $input
      * @return array{
@@ -116,11 +116,11 @@ final class TripService
         $errors = [];
 
         if ($data['agence_depart_id'] <= 0) {
-            $errors['agence_depart_id'] = 'Veuillez sÃ©lectionner une agence de dÃ©part.';
+            $errors['agence_depart_id'] = 'Veuillez sélectionner une agence de départ.';
         }
 
         if ($data['agence_arrivee_id'] <= 0) {
-            $errors['agence_arrivee_id'] = 'Veuillez sÃ©lectionner une agence dâ€™arrivÃ©e.';
+            $errors['agence_arrivee_id'] = 'Veuillez sélectionner une agence d’arrivée.';
         }
 
         if (
@@ -128,7 +128,7 @@ final class TripService
             && $data['agence_arrivee_id'] > 0
             && $data['agence_depart_id'] === $data['agence_arrivee_id']
         ) {
-            $errors['agence_arrivee_id'] = 'Lâ€™agence dâ€™arrivÃ©e doit Ãªtre diffÃ©rente de lâ€™agence de dÃ©part.';
+            $errors['agence_arrivee_id'] = 'L’agence d’arrivée doit être différente de l’agence de départ.';
         }
 
         $departureDate = $this->createDateTime($data['date_depart']);
@@ -136,32 +136,32 @@ final class TripService
         $now = new DateTimeImmutable();
 
         if ($departureDate === null) {
-            $errors['date_depart'] = 'Veuillez saisir une date de dÃ©part valide.';
+            $errors['date_depart'] = 'Veuillez saisir une date de départ valide.';
         } elseif ($departureDate < $now) {
-            $errors['date_depart'] = 'La date de dÃ©part doit Ãªtre dans le futur.';
+            $errors['date_depart'] = 'La date de départ doit être dans le futur.';
         }
 
         if ($arrivalDate === null) {
-            $errors['date_arrivee'] = 'Veuillez saisir une date dâ€™arrivÃ©e valide.';
+            $errors['date_arrivee'] = 'Veuillez saisir une date d’arrivée valide.';
         }
 
         if ($departureDate !== null && $arrivalDate !== null && $arrivalDate <= $departureDate) {
-            $errors['date_arrivee'] = 'La date dâ€™arrivÃ©e doit Ãªtre postÃ©rieure Ã  la date de dÃ©part.';
+            $errors['date_arrivee'] = 'La date d’arrivée doit être postérieure à la date de départ.';
         }
 
         if ($data['places_total'] <= 0) {
-            $errors['places_total'] = 'Le nombre total de places doit Ãªtre supÃ©rieur Ã  zÃ©ro.';
+            $errors['places_total'] = 'Le nombre total de places doit être supérieur à zéro.';
         }
 
         if ($data['places_disponibles'] < 0) {
-            $errors['places_disponibles'] = 'Le nombre de places disponibles ne peut pas Ãªtre nÃ©gatif.';
+            $errors['places_disponibles'] = 'Le nombre de places disponibles ne peut pas être négatif.';
         }
 
         if (
             $data['places_total'] > 0
             && $data['places_disponibles'] > $data['places_total']
         ) {
-            $errors['places_disponibles'] = 'Le nombre de places disponibles ne peut pas dÃ©passer le nombre total de places.';
+            $errors['places_disponibles'] = 'Le nombre de places disponibles ne peut pas dépasser le nombre total de places.';
         }
 
         return [
@@ -171,7 +171,7 @@ final class TripService
     }
 
     /**
-     * PrÃ©pare les donnÃ©es pour le formulaire dâ€™Ã©dition.
+     * Prépare les données pour le formulaire d’édition.
      *
      * @param array<string, mixed> $trip
      * @return array<string, mixed>
@@ -189,7 +189,7 @@ final class TripService
     }
 
     /**
-     * CrÃ©e un trajet.
+     * Crée un trajet.
      *
      * @param array<string, mixed> $data
      */
@@ -203,7 +203,7 @@ final class TripService
     }
 
     /**
-     * Met Ã  jour un trajet.
+     * Met à jour un trajet.
      *
      * @param array<string, mixed> $data
      */
@@ -224,7 +224,7 @@ final class TripService
     }
 
     /**
-     * Tente de rÃ©server une place.
+     * Tente de réserver une place.
      */
     public function reserveTrip(int $tripId, int $userId): string
     {
@@ -235,7 +235,7 @@ final class TripService
         }
 
         if ((int) ($trip['author_id'] ?? 0) === $userId) {
-            return 'Vous ne pouvez pas rÃ©server votre propre trajet.';
+            return 'Vous ne pouvez pas réserver votre propre trajet.';
         }
 
         if ((int) ($trip['places_disponibles'] ?? 0) <= 0) {
@@ -243,23 +243,23 @@ final class TripService
         }
 
         if ($this->reservationModel->existsForUserAndTrip($userId, $tripId)) {
-            return 'Vous avez dÃ©jÃ  rÃ©servÃ© une place sur ce trajet.';
+            return 'Vous avez déjà réservé une place sur ce trajet.';
         }
 
         if (!$this->reservationModel->create($userId, $tripId)) {
-            return 'La rÃ©servation a Ã©chouÃ©. Veuillez rÃ©essayer.';
+            return 'La réservation a échoué. Veuillez réessayer.';
         }
 
         return '';
     }
 
     /**
-     * Tente d'annuler une rÃ©servation.
+     * Tente d'annuler une réservation.
      */
     public function cancelReservation(int $reservationId, int $userId): string
     {
         if (!$this->reservationModel->delete($reservationId, $userId)) {
-            return 'RÃ©servation introuvable ou annulation impossible.';
+            return 'Réservation introuvable ou annulation impossible.';
         }
 
         return '';

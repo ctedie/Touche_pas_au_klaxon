@@ -21,7 +21,7 @@ $availableSeats = (int) ($formData['places_disponibles'] ?? 1);
     <div class="card-body">
         <div class="row g-3 mb-4">
             <div class="col-md-6">
-                <label class="form-label">PrÃ©nom</label>
+                <label class="form-label">Prénom</label>
                 <input type="text" class="form-control" value="<?= $escape($currentUser['first_name'] ?? '') ?>" disabled>
             </div>
 
@@ -36,14 +36,14 @@ $availableSeats = (int) ($formData['places_disponibles'] ?? 1);
             </div>
 
             <div class="col-md-6">
-                <label class="form-label">TÃ©lÃ©phone</label>
+                <label class="form-label">Téléphone</label>
                 <input type="text" class="form-control" value="<?= $escape($currentUser['phone'] ?? '') ?>" disabled>
             </div>
         </div>
 
         <div class="row g-3">
             <div class="col-md-6">
-                <label for="agence_depart_id" class="form-label">Agence de dÃ©part</label>
+                <label for="agence_depart_id" class="form-label">Agence de départ</label>
                 <select name="agence_depart_id" id="agence_depart_id" class="form-select<?= isset($errors['agence_depart_id']) ? ' is-invalid' : '' ?>" required>
                     <option value="">Choisir...</option>
                     <?php foreach ($agencies as $agency): ?>
@@ -58,7 +58,7 @@ $availableSeats = (int) ($formData['places_disponibles'] ?? 1);
             </div>
 
             <div class="col-md-6">
-                <label for="agence_arrivee_id" class="form-label">Agence dâ€™arrivÃ©e</label>
+                <label for="agence_arrivee_id" class="form-label">Agence d’arrivée</label>
                 <select name="agence_arrivee_id" id="agence_arrivee_id" class="form-select<?= isset($errors['agence_arrivee_id']) ? ' is-invalid' : '' ?>" required>
                     <option value="">Choisir...</option>
                     <?php foreach ($agencies as $agency): ?>
@@ -73,7 +73,7 @@ $availableSeats = (int) ($formData['places_disponibles'] ?? 1);
             </div>
 
             <div class="col-md-6">
-                <label for="date_depart" class="form-label">Date et heure de dÃ©part</label>
+                <label for="date_depart" class="form-label">Date et heure de départ</label>
                 <input type="datetime-local" name="date_depart" id="date_depart" class="form-control<?= isset($errors['date_depart']) ? ' is-invalid' : '' ?>" value="<?= $escape($dateDeparture) ?>" required>
                 <?php if (isset($errors['date_depart'])): ?>
                     <div class="invalid-feedback"><?= $escape($errors['date_depart']) ?></div>
@@ -81,7 +81,7 @@ $availableSeats = (int) ($formData['places_disponibles'] ?? 1);
             </div>
 
             <div class="col-md-6">
-                <label for="date_arrivee" class="form-label">Date et heure dâ€™arrivÃ©e</label>
+                <label for="date_arrivee" class="form-label">Date et heure d’arrivée</label>
                 <input type="datetime-local" name="date_arrivee" id="date_arrivee" class="form-control<?= isset($errors['date_arrivee']) ? ' is-invalid' : '' ?>" value="<?= $escape($dateArrival) ?>" required>
                 <?php if (isset($errors['date_arrivee'])): ?>
                     <div class="invalid-feedback"><?= $escape($errors['date_arrivee']) ?></div>

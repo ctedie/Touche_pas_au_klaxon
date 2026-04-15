@@ -8,7 +8,7 @@ use App\Core\Database;
 use PDO;
 
 /**
- * ModÃ¨le utilisateur.
+ * Modèle utilisateur.
  */
 final class User
 {
@@ -64,8 +64,8 @@ final class User
     /**
      * Authentifie un utilisateur.
      *
-     * Compatible avec un mot de passe hashÃ© ou, temporairement,
-     * avec une valeur en clair dÃ©jÃ  prÃ©sente dans le jeu d'essai.
+     * Compatible avec un mot de passe hashé ou, temporairement,
+     * avec une valeur en clair déjà présente dans le jeu d'essai.
      *
      * @return array<string, mixed>|null
      */
@@ -89,7 +89,7 @@ final class User
     }
 
     /**
-     * VÃ©rifie le mot de passe.
+     * Vérifie le mot de passe.
      */
     private function verifyPassword(string $plainPassword, string $storedPassword): bool
     {

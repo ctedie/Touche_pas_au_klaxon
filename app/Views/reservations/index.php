@@ -12,11 +12,11 @@ $basePath = '/touche-pas-au-klaxon/public';
 ?>
 
 <section class="page-section">
-    <h1 class="page-title">Mes rÃ©servations</h1>
+    <h1 class="page-title">Mes réservations</h1>
 
     <?php if ($reservations === []): ?>
         <div class="empty-state">
-            <p class="mb-0">Vous n'avez aucune rÃ©servation pour le moment.</p>
+            <p class="mb-0">Vous n'avez aucune réservation pour le moment.</p>
         </div>
     <?php else: ?>
         <div class="row g-4">
@@ -25,14 +25,14 @@ $basePath = '/touche-pas-au-klaxon/public';
                     <div class="card reservation-card shadow-sm border-0">
                         <div class="card-body">
                             <h2 class="h5 mb-3">
-                                <?= $escape($reservation['departure_agency'] ?? '') ?> â†’ <?= $escape($reservation['arrival_agency'] ?? '') ?>
+                                <?= $escape($reservation['departure_agency'] ?? '') ?> → <?= $escape($reservation['arrival_agency'] ?? '') ?>
                             </h2>
 
                             <dl class="row mb-4">
-                                <dt class="col-sm-5">DÃ©part</dt>
+                                <dt class="col-sm-5">Départ</dt>
                                 <dd class="col-sm-7 mb-2"><?= $escape($reservation['departure_datetime'] ?? '') ?></dd>
 
-                                <dt class="col-sm-5">ArrivÃ©e</dt>
+                                <dt class="col-sm-5">Arrivée</dt>
                                 <dd class="col-sm-7 mb-2"><?= $escape($reservation['arrival_datetime'] ?? '') ?></dd>
 
                                 <dt class="col-sm-5">Conducteur</dt>
@@ -43,11 +43,11 @@ $basePath = '/touche-pas-au-klaxon/public';
                             </dl>
 
                             <div class="d-flex gap-2 flex-wrap">
-                                <a class="btn btn-outline-dark" href="<?= $basePath ?>/trip/show?id=<?= (int) ($reservation['trip_id'] ?? 0) ?>">Voir le dÃ©tail</a>
+                                <a class="btn btn-outline-dark" href="<?= $basePath ?>/trip/show?id=<?= (int) ($reservation['trip_id'] ?? 0) ?>">Voir le détail</a>
 
-                                <form action="<?= $basePath ?>/reservation/cancel" method="post" class="d-inline" onsubmit="return confirm('Confirmer l\'annulation de cette rÃ©servation ?');">
+                                <form action="<?= $basePath ?>/reservation/cancel" method="post" class="d-inline" onsubmit="return confirm('Confirmer l\'annulation de cette réservation ?');">
                                     <input type="hidden" name="trip_id" value="<?= (int) ($reservation['trip_id'] ?? 0) ?>">
-                                    <button type="submit" class="btn btn-danger">Annuler la rÃ©servation</button>
+                                    <button type="submit" class="btn btn-danger">Annuler la réservation</button>
                                 </form>
                             </div>
                         </div>

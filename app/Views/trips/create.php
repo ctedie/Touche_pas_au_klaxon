@@ -16,13 +16,13 @@ $basePath = $basePath === '/' ? '' : rtrim($basePath, '/');
 
 <section class="page-section">
     <div class="container px-0">
-        <h1 class="page-title">CrÃ©er un trajet</h1>
+        <h1 class="page-title">Créer un trajet</h1>
 
         <form method="post" action="<?= $basePath ?>/trip/store" novalidate>
             <?php require __DIR__ . '/_form.php'; ?>
 
             <div class="mt-4 d-flex gap-2 flex-wrap">
-                <button type="submit" class="btn btn-dark">CrÃ©er le trajet</button>
+                <button type="submit" class="btn btn-dark">Créer le trajet</button>
                 <a href="<?= $basePath ?>/" class="btn btn-outline-secondary">Annuler</a>
             </div>
         </form>

@@ -7,7 +7,7 @@ namespace App\Controllers;
 use App\Models\User;
 
 /**
- * ContrÃƒÂ´leur d''authentification.
+ * Contrôleur d''authentification.
  */
 final class AuthController extends Controller
 {
