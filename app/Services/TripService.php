@@ -13,6 +13,8 @@ use DateTimeImmutable;
  */
 final class TripService
 {
+    private const DEFAULT_PER_PAGE = 5;
+
     private Trip $tripModel;
 
     private Reservation $reservationModel;
@@ -26,11 +28,31 @@ final class TripService
     /**
      * Retourne les trajets visibles sur l'accueil.
      *
-     * @return array<int, array<string, mixed>>
+     * @return array{items: array<int, array<string, mixed>>, pagination: array<string, int|bool>}
      */
-    public function getAvailableTrips(): array
+    public function getAvailableTripsPage(int $page, int $perPage = self::DEFAULT_PER_PAGE): array
     {
-        return $this->tripModel->findAvailableTrips();
+        $pagination = $this->buildPagination($page, $perPage, $this->tripModel->countAvailableTrips());
+
+        return [
+            'items' => $this->tripModel->findAvailableTrips($pagination['per_page'], $pagination['offset']),
+            'pagination' => $pagination,
+        ];
+    }
+
+    /**
+     * Retourne les trajets visibles dans l'administration.
+     *
+     * @return array{items: array<int, array<string, mixed>>, pagination: array<string, int|bool>}
+     */
+    public function getAdminTripsPage(int $page, int $perPage = self::DEFAULT_PER_PAGE): array
+    {
+        $pagination = $this->buildPagination($page, $perPage, $this->tripModel->countAllForAdmin());
+
+        return [
+            'items' => $this->tripModel->findAllForAdmin($pagination['per_page'], $pagination['offset']),
+            'pagination' => $pagination,
+        ];
     }
 
     /**
@@ -241,6 +263,28 @@ final class TripService
         }
 
         return '';
+    }
+
+    /**
+     * @return array<string, int|bool>
+     */
+    private function buildPagination(int $page, int $perPage, int $totalItems): array
+    {
+        $safePerPage = max(1, $perPage);
+        $totalPages = max(1, (int) ceil($totalItems / $safePerPage));
+        $currentPage = min(max(1, $page), $totalPages);
+
+        return [
+            'current_page' => $currentPage,
+            'per_page' => $safePerPage,
+            'total_items' => $totalItems,
+            'total_pages' => $totalPages,
+            'offset' => ($currentPage - 1) * $safePerPage,
+            'has_previous_page' => $currentPage > 1,
+            'has_next_page' => $currentPage < $totalPages,
+            'previous_page' => max(1, $currentPage - 1),
+            'next_page' => min($totalPages, $currentPage + 1),
+        ];
     }
 
     private function createDateTime(string $value): ?DateTimeImmutable
