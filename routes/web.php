@@ -6,14 +6,19 @@ use App\Controllers\AuthController;
 use App\Controllers\HomeController;
 use App\Controllers\TripController;
 
+$basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
+$basePath = rtrim($basePath, '/');
+
 return [
-    '/' => [HomeController::class, 'index'],
+    $basePath === '' ? '/' : $basePath => [HomeController::class, 'index'],
 
-    '/login' => [AuthController::class, 'showLoginForm'],
-    '/login/submit' => [AuthController::class, 'login'],
-    '/logout' => [AuthController::class, 'logout'],
+    $basePath . '/login' => [AuthController::class, 'showLoginForm'],
+    $basePath . '/login/submit' => [AuthController::class, 'login'],
+    $basePath . '/logout' => [AuthController::class, 'logout'],
 
-    '/trip/show' => [TripController::class, 'show'],
-    '/trip/create' => [TripController::class, 'create'],
-    '/trip/store' => [TripController::class, 'store'],
+    $basePath . '/trip/create' => [TripController::class, 'create'],
+    $basePath . '/trip/store' => [TripController::class, 'store'],
+    $basePath . '/trip/show' => [TripController::class, 'show'],
+    $basePath . '/trip/edit' => [TripController::class, 'edit'],
+    $basePath . '/trip/update' => [TripController::class, 'update'],
 ];

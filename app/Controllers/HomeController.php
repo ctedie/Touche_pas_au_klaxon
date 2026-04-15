@@ -11,11 +11,13 @@ use App\Models\Trip;
  */
 class HomeController extends Controller
 {
+    
     /**
      * Affiche les trajets disponibles.
      */
     public function index(): void
     {
+        
         $tripModel = new Trip();
 
         $trips = $tripModel->findAvailableTrips();

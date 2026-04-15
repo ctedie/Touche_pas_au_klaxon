@@ -8,7 +8,7 @@ use App\Core\Database;
 use PDO;
 
 /**
- * ModÃ¨le des agences.
+ * ModÃƒÂ¨le des agences.
  */
 final class Agency
 {
@@ -20,7 +20,7 @@ final class Agency
     }
 
     /**
-     * Retourne la liste des agences triÃ©es par nom.
+     * Retourne la liste des agences triÃƒÂ©es par nom.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -32,6 +32,6 @@ final class Agency
 
         $agencies = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        return is_array($agencies) ? $agencies : [];
+        return $agencies;
     }
 }
