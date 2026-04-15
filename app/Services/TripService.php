@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Models\Reservation;
 use App\Models\Trip;
 use DateTimeImmutable;
 
@@ -14,9 +15,12 @@ final class TripService
 {
     private Trip $tripModel;
 
+    private Reservation $reservationModel;
+
     public function __construct()
     {
         $this->tripModel = new Trip();
+        $this->reservationModel = new Reservation();
     }
 
     /**
@@ -47,6 +51,24 @@ final class TripService
     public function getAgencies(): array
     {
         return $this->tripModel->findAgencies();
+    }
+
+    /**
+     * Retourne les rÃ©servations d'un utilisateur.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getReservationsByUserId(int $userId): array
+    {
+        return $this->reservationModel->findByUserId($userId);
+    }
+
+    /**
+     * VÃ©rifie si l'utilisateur a dÃ©jÃ  rÃ©servÃ© ce trajet.
+     */
+    public function hasUserReservedTrip(int $userId, int $tripId): bool
+    {
+        return $this->reservationModel->existsForUserAndTrip($userId, $tripId);
     }
 
     /**
@@ -93,14 +115,12 @@ final class TripService
 
         if ($departureDate === null) {
             $errors['date_depart'] = 'Veuillez saisir une date de dÃ©part valide.';
+        } elseif ($departureDate < $now) {
+            $errors['date_depart'] = 'La date de dÃ©part doit Ãªtre dans le futur.';
         }
 
         if ($arrivalDate === null) {
             $errors['date_arrivee'] = 'Veuillez saisir une date dâ€™arrivÃ©e valide.';
-        }
-
-        if ($departureDate !== null && $departureDate < $now) {
-            $errors['date_depart'] = 'La date de dÃ©part doit Ãªtre dans le futur.';
         }
 
         if ($departureDate !== null && $arrivalDate !== null && $arrivalDate <= $departureDate) {
@@ -108,7 +128,7 @@ final class TripService
         }
 
         if ($data['places_total'] <= 0) {
-            $errors['places_total'] = 'Le nombre total de places doit Ãªtre supÃ©rieur Ã  0.';
+            $errors['places_total'] = 'Le nombre total de places doit Ãªtre supÃ©rieur Ã  zÃ©ro.';
         }
 
         if ($data['places_disponibles'] < 0) {
@@ -122,14 +142,6 @@ final class TripService
             $errors['places_disponibles'] = 'Le nombre de places disponibles ne peut pas dÃ©passer le nombre total de places.';
         }
 
-        if ($departureDate !== null) {
-            $data['date_depart'] = $departureDate->format('Y-m-d H:i:s');
-        }
-
-        if ($arrivalDate !== null) {
-            $data['date_arrivee'] = $arrivalDate->format('Y-m-d H:i:s');
-        }
-
         return [
             'data' => $data,
             'errors' => $errors,
@@ -137,29 +149,8 @@ final class TripService
     }
 
     /**
-     * @param array<string, mixed> $data
-     */
-    public function createTrip(array $data, int $userId): int
-    {
-        $data['auteur_id'] = $userId;
-
-        return $this->tripModel->create($data);
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function updateTrip(int $tripId, int $userId, array $data): bool
-    {
-        return $this->tripModel->update($tripId, $userId, $data);
-    }
-
-    public function deleteTrip(int $tripId, int $userId): bool
-    {
-        return $this->tripModel->delete($tripId, $userId);
-    }
-
-    /**
+     * PrÃ©pare les donnÃ©es pour le formulaire dâ€™Ã©dition.
+     *
      * @param array<string, mixed> $trip
      * @return array<string, mixed>
      */
@@ -168,11 +159,88 @@ final class TripService
         return [
             'agence_depart_id' => (int) ($trip['agence_depart_id'] ?? 0),
             'agence_arrivee_id' => (int) ($trip['agence_arrivee_id'] ?? 0),
-            'date_depart' => $this->formatForDateTimeLocal($trip['date_depart'] ?? null),
-            'date_arrivee' => $this->formatForDateTimeLocal($trip['date_arrivee'] ?? null),
-            'places_total' => (int) ($trip['places_total'] ?? 1),
-            'places_disponibles' => (int) ($trip['places_disponibles'] ?? 1),
+            'date_depart' => $this->formatForDatetimeLocal((string) ($trip['date_depart'] ?? '')),
+            'date_arrivee' => $this->formatForDatetimeLocal((string) ($trip['date_arrivee'] ?? '')),
+            'places_total' => (int) ($trip['places_total'] ?? 0),
+            'places_disponibles' => (int) ($trip['places_disponibles'] ?? 0),
         ];
+    }
+
+    /**
+     * CrÃ©e un trajet.
+     *
+     * @param array<string, mixed> $data
+     */
+    public function createTrip(array $data, int $authorId): int
+    {
+        $data['auteur_id'] = $authorId;
+        $data['date_depart'] = $this->normalizeDateTimeForDatabase((string) $data['date_depart']);
+        $data['date_arrivee'] = $this->normalizeDateTimeForDatabase((string) $data['date_arrivee']);
+
+        return $this->tripModel->create($data);
+    }
+
+    /**
+     * Met Ã  jour un trajet.
+     *
+     * @param array<string, mixed> $data
+     */
+    public function updateTrip(int $tripId, int $authorId, array $data): bool
+    {
+        $data['date_depart'] = $this->normalizeDateTimeForDatabase((string) $data['date_depart']);
+        $data['date_arrivee'] = $this->normalizeDateTimeForDatabase((string) $data['date_arrivee']);
+
+        return $this->tripModel->update($tripId, $authorId, $data);
+    }
+
+    /**
+     * Supprime un trajet.
+     */
+    public function deleteTrip(int $tripId, int $authorId): bool
+    {
+        return $this->tripModel->delete($tripId, $authorId);
+    }
+
+    /**
+     * Tente de rÃ©server une place.
+     */
+    public function reserveTrip(int $tripId, int $userId): string
+    {
+        $trip = $this->tripModel->findById($tripId);
+
+        if ($trip === null) {
+            return 'Trajet introuvable.';
+        }
+
+        if ((int) ($trip['author_id'] ?? 0) === $userId) {
+            return 'Vous ne pouvez pas rÃ©server votre propre trajet.';
+        }
+
+        if ((int) ($trip['places_disponibles'] ?? 0) <= 0) {
+            return 'Ce trajet est complet.';
+        }
+
+        if ($this->reservationModel->existsForUserAndTrip($userId, $tripId)) {
+            return 'Vous avez dÃ©jÃ  rÃ©servÃ© une place sur ce trajet.';
+        }
+
+        if (!$this->reservationModel->create($userId, $tripId)) {
+            return 'La rÃ©servation a Ã©chouÃ©. Veuillez rÃ©essayer.';
+        }
+
+        return '';
+    }
+
+    /**
+     * Tente d'annuler une rÃ©servation.
+     */
+    public function cancelReservation(int $reservationId, int $userId): string
+    {
+        if (!$this->reservationModel->delete($reservationId, $userId)) {
+            return 'RÃ©servation introuvable ou annulation impossible.';
+        }
+
+        return '';
     }
 
     private function createDateTime(string $value): ?DateTimeImmutable
@@ -181,23 +249,28 @@ final class TripService
             return null;
         }
 
-        $date = DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $value);
+        $dateTime = DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $value);
 
-        if ($date instanceof DateTimeImmutable) {
-            return $date;
+        if ($dateTime instanceof DateTimeImmutable) {
+            return $dateTime;
         }
 
-        return new DateTimeImmutable($value);
+        $fallback = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value);
+
+        return $fallback instanceof DateTimeImmutable ? $fallback : null;
     }
 
-    private function formatForDateTimeLocal(mixed $value): string
+    private function normalizeDateTimeForDatabase(string $value): string
     {
-        if (!is_string($value) || $value === '') {
-            return '';
-        }
+        $dateTime = $this->createDateTime($value);
 
-        $date = new DateTimeImmutable($value);
+        return $dateTime instanceof DateTimeImmutable ? $dateTime->format('Y-m-d H:i:s') : $value;
+    }
 
-        return $date->format('Y-m-d\TH:i');
+    private function formatForDatetimeLocal(string $value): string
+    {
+        $dateTime = $this->createDateTime($value);
+
+        return $dateTime instanceof DateTimeImmutable ? $dateTime->format('Y-m-d\TH:i') : $value;
     }
 }

@@ -39,9 +39,12 @@ final class TripController extends Controller
             return;
         }
 
+        $hasReservation = $this->tripService->hasUserReservedTrip((int) $user['id'], $tripId);
+
         $this->render('trips/show', [
             'trip' => $trip,
             'currentUser' => $user,
+            'hasReservation' => $hasReservation,
         ]);
     }
 
@@ -209,6 +212,77 @@ final class TripController extends Controller
 
         $_SESSION['flash_success'] = 'Le trajet a bien Ã©tÃ© supprimÃ©.';
         $this->redirect('/');
+    }
+
+    /**
+     * RÃ©serve une place sur un trajet.
+     */
+    public function reserve(): void
+    {
+        $user = $this->requireAuthenticatedUser();
+
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+            $this->redirect('/');
+        }
+
+        $tripId = isset($_POST['trip_id']) ? (int) $_POST['trip_id'] : 0;
+        if ($tripId <= 0) {
+            http_response_code(404);
+            echo 'Trajet introuvable.';
+            return;
+        }
+
+        $error = $this->tripService->reserveTrip($tripId, (int) $user['id']);
+
+        if ($error !== '') {
+            $_SESSION['flash_error'] = $error;
+            $this->redirect('/trip/show?id=' . $tripId);
+        }
+
+        $_SESSION['flash_success'] = 'Votre rÃ©servation a bien Ã©tÃ© enregistrÃ©e.';
+        $this->redirect('/reservations');
+    }
+
+    /**
+     * Affiche les rÃ©servations de l'utilisateur connectÃ©.
+     */
+    public function reservations(): void
+    {
+        $user = $this->requireAuthenticatedUser();
+
+        $this->render('reservations/index', [
+            'currentUser' => $user,
+            'reservations' => $this->tripService->getReservationsByUserId((int) $user['id']),
+        ]);
+    }
+
+    /**
+     * Annule une rÃ©servation.
+     */
+    public function cancelReservation(): void
+    {
+        $user = $this->requireAuthenticatedUser();
+
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+            $this->redirect('/reservations');
+        }
+
+        $reservationId = isset($_POST['reservation_id']) ? (int) $_POST['reservation_id'] : 0;
+        if ($reservationId <= 0) {
+            http_response_code(404);
+            echo 'RÃ©servation introuvable.';
+            return;
+        }
+
+        $error = $this->tripService->cancelReservation($reservationId, (int) $user['id']);
+
+        if ($error !== '') {
+            $_SESSION['flash_error'] = $error;
+            $this->redirect('/reservations');
+        }
+
+        $_SESSION['flash_success'] = 'La rÃ©servation a bien Ã©tÃ© annulÃ©e.';
+        $this->redirect('/reservations');
     }
 
     /**

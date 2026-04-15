@@ -98,8 +98,8 @@ INSERT INTO agences (nom) VALUES
 
 -- =====================
 -- INSERT UTILISATEURS
--- mot de passe par défaut : password
--- hash généré avec password_hash()
+-- mot de passe par dÃ©faut : password
+-- hash gÃ©nÃ©rÃ© avec password_hash()
 -- =====================
 
 INSERT INTO utilisateurs (nom, prenom, telephone, email, mot_de_passe, role) VALUES
@@ -107,9 +107,9 @@ INSERT INTO utilisateurs (nom, prenom, telephone, email, mot_de_passe, role) VAL
 ('Dubois','Sophie','0698765432','sophie.dubois@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Bernard','Julien','0622446688','julien.bernard@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Moreau','Camille','0611223344','camille.moreau@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
-('Lefèvre','Lucie','0777889900','lucie.lefevre@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
+('LefÃ¨vre','Lucie','0777889900','lucie.lefevre@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Leroy','Thomas','0655443322','thomas.leroy@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
-('Roux','Chloé','0633221199','chloe.roux@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
+('Roux','ChloÃ©','0633221199','chloe.roux@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Petit','Maxime','0766778899','maxime.petit@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Garnier','Laura','0688776655','laura.garnier@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
 ('Dupuis','Antoine','0744556677','antoine.dupuis@email.fr','$2y$10$abcdefghijklmnopqrstuv','user'),
@@ -140,3 +140,27 @@ INSERT INTO trajets (
 (1, 2, 1, '2026-05-01 08:00:00', '2026-05-01 12:00:00', 4, 3),
 (2, 1, 3, '2026-05-02 09:00:00', '2026-05-02 13:30:00', 3, 2),
 (3, 4, 2, '2026-05-03 07:30:00', '2026-05-03 11:00:00', 2, 2);
+
+-- =====================
+-- TABLE RESERVATIONS
+-- =====================
+
+CREATE TABLE reservations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    utilisateur_id INT NOT NULL,
+    trajet_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_reservations_utilisateur
+        FOREIGN KEY (utilisateur_id)
+        REFERENCES utilisateurs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_reservations_trajet
+        FOREIGN KEY (trajet_id)
+        REFERENCES trajets(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT uniq_reservation_utilisateur_trajet
+        UNIQUE (utilisateur_id, trajet_id)
+);
