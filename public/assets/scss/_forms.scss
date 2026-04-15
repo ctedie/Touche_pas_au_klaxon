@@ -1,0 +1,26 @@
+.auth-card,
+.form-page-card {
+    background: #ffffff;
+    border: 1px solid $border-color;
+    border-radius: $card-border-radius;
+    box-shadow: $box-shadow;
+}
+
+.form-section-title {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.form-control,
+.form-select {
+    border-width: 1px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(17, 24, 39, 0.12);
+}

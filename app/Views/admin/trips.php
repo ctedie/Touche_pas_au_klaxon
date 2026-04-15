@@ -15,70 +15,82 @@ $currentPage = (int) ($pagination['current_page'] ?? 1);
 $totalPages = (int) ($pagination['total_pages'] ?? 1);
 ?>
 
-<div class="container py-4">
-    <h1>Liste des trajets</h1>
+<section class="page-section">
+    <h1 class="page-title">Liste des trajets</h1>
 
     <?php if ($trips === []): ?>
-        <p>Aucun trajet trouvÃ©.</p>
+        <div class="empty-state">
+            <p class="mb-0">Aucun trajet trouvÃ©.</p>
+        </div>
     <?php else: ?>
-        <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>DÃ©part</th>
-                    <th>ArrivÃ©e</th>
-                    <th>Date dÃ©part</th>
-                    <th>Date arrivÃ©e</th>
-                    <th>Places</th>
-                    <th>Auteur</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($trips as $trip): ?>
+        <div class="table-wrap table-responsive">
+            <table class="table table-striped table-hover table-app align-middle mb-0">
+                <thead>
                     <tr>
-                        <td><?= (int) ($trip['id'] ?? 0) ?></td>
-                        <td><?= $escape($trip['departure_agency'] ?? '') ?></td>
-                        <td><?= $escape($trip['arrival_agency'] ?? '') ?></td>
-                        <td><?= $escape($trip['departure_datetime'] ?? '') ?></td>
-                        <td><?= $escape($trip['arrival_datetime'] ?? '') ?></td>
-                        <td><?= (int) ($trip['available_seats'] ?? 0) ?> / <?= (int) ($trip['places_total'] ?? 0) ?></td>
-                        <td><?= $escape(($trip['author_first_name'] ?? '') . ' ' . ($trip['author_last_name'] ?? '')) ?></td>
-                        <td>
-                            <form method="post" action="<?= $escape(base_url('admin/trips/delete')) ?>" style="display:inline;" onsubmit="return confirm('Confirmer la suppression de ce trajet ?');">
-                                <input type="hidden" name="id" value="<?= (int) ($trip['id'] ?? 0) ?>">
-                                <button type="submit">Supprimer</button>
-                            </form>
-                        </td>
+                        <th>ID</th>
+                        <th>DÃ©part</th>
+                        <th>ArrivÃ©e</th>
+                        <th>Date dÃ©part</th>
+                        <th>Date arrivÃ©e</th>
+                        <th>Places</th>
+                        <th>Auteur</th>
+                        <th>Action</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($trips as $trip): ?>
+                        <tr>
+                            <td><?= (int) ($trip['id'] ?? 0) ?></td>
+                            <td><?= $escape($trip['departure_agency'] ?? '') ?></td>
+                            <td><?= $escape($trip['arrival_agency'] ?? '') ?></td>
+                            <td><?= $escape($trip['departure_datetime'] ?? '') ?></td>
+                            <td><?= $escape($trip['arrival_datetime'] ?? '') ?></td>
+                            <td><?= (int) ($trip['available_seats'] ?? 0) ?> / <?= (int) ($trip['places_total'] ?? 0) ?></td>
+                            <td><?= $escape(trim((string) (($trip['author_first_name'] ?? '') . ' ' . ($trip['author_last_name'] ?? '')))) ?></td>
+                            <td>
+                                <form method="post" action="<?= $escape(base_url('admin/trips/delete')) ?>" class="table-inline-form" onsubmit="return confirm('Confirmer la suppression de ce trajet ?');">
+                                    <input type="hidden" name="id" value="<?= (int) ($trip['id'] ?? 0) ?>">
+                                    <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     <?php endif; ?>
 
     <?php if ($totalPages > 1): ?>
-        <nav aria-label="Pagination des trajets administrateur">
-            <p>Page <?= $currentPage ?> sur <?= $totalPages ?></p>
+        <div class="pagination-wrap">
+            <p class="mb-0">Page <?= $currentPage ?> sur <?= $totalPages ?></p>
 
-            <div>
-                <?php if (!empty($pagination['has_previous_page'])): ?>
-                    <a href="<?= $escape(base_url('admin/trips?page=' . (string) $pagination['previous_page'])) ?>">Page prÃ©cÃ©dente</a>
-                <?php endif; ?>
-
-                <?php for ($page = 1; $page <= $totalPages; $page++): ?>
-                    <?php if ($page === $currentPage): ?>
-                        <strong><?= $page ?></strong>
-                    <?php else: ?>
-                        <a href="<?= $escape(base_url('admin/trips?page=' . $page)) ?>"><?= $page ?></a>
+            <nav aria-label="Pagination des trajets administrateur">
+                <ul class="pagination mb-0">
+                    <?php if (!empty($pagination['has_previous_page'])): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="<?= $escape(base_url('admin/trips?page=' . (string) $pagination['previous_page'])) ?>">PrÃ©cÃ©dente</a>
+                        </li>
                     <?php endif; ?>
-                <?php endfor; ?>
 
-                <?php if (!empty($pagination['has_next_page'])): ?>
-                    <a href="<?= $escape(base_url('admin/trips?page=' . (string) $pagination['next_page'])) ?>">Page suivante</a>
-                <?php endif; ?>
-            </div>
-        </nav>
+                    <?php for ($page = 1; $page <= $totalPages; $page++): ?>
+                        <li class="page-item<?= $page === $currentPage ? ' active' : '' ?>">
+                            <?php if ($page === $currentPage): ?>
+                                <span class="page-link"><?= $page ?></span>
+                            <?php else: ?>
+                                <a class="page-link" href="<?= $escape(base_url('admin/trips?page=' . $page)) ?>"><?= $page ?></a>
+                            <?php endif; ?>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php if (!empty($pagination['has_next_page'])): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="<?= $escape(base_url('admin/trips?page=' . (string) $pagination['next_page'])) ?>">Suivante</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+        </div>
     <?php endif; ?>
-</div>
+</section>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>
